@@ -1,4 +1,6 @@
-
+<!DOCTYPE html>
+<html lang="it">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ordini</title>
 <style>
 :root{--bg:#fff;--surface:#f7f7f7;--border:#e0e0e0;--border-dark:#bbb;--text:#111;--text-dim:#888;--accent:#111;--accent-inv:#fff;--danger:#cc0000;--radius:6px}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -19,6 +21,12 @@ header{background:var(--text);color:var(--accent-inv);padding:14px 18px;display:
 .screen{display:none}
 .screen.active{display:block;animation:up .2s ease}
 @keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Nav bar TOP */
+.nav-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.nav-bar .btn{flex-shrink:0}
+.nav-bar-right{margin-left:auto;display:flex;gap:10px;align-items:center}
+
 .screen-title{font-size:1.3rem;font-weight:700;margin-bottom:4px}
 .screen-sub{color:var(--text-dim);font-size:.85rem;margin-bottom:22px}
 .section-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:8px}
@@ -46,7 +54,6 @@ header{background:var(--text);color:var(--accent-inv);padding:14px 18px;display:
 .btn-danger{background:var(--bg);color:var(--danger);border:1.5px solid #eab;font-size:.8rem;padding:7px 12px}
 .btn-print{background:var(--text);color:#fff;width:100%;justify-content:center;padding:14px;font-size:1rem}
 .btn-sm{padding:6px 12px;font-size:.8rem}
-.actions{display:flex;gap:10px;margin-top:24px;align-items:center;flex-wrap:wrap}
 .divider{height:1px;background:var(--border);margin:20px 0}
 .search-wrap{position:relative;margin-bottom:14px}
 .search-wrap input{width:100%;border:1.5px solid var(--border-dark);border-radius:var(--radius);padding:11px 14px 11px 38px;font-size:.95rem;font-family:inherit;outline:none}
@@ -178,7 +185,13 @@ textarea.notes:focus{border-color:var(--text)}
 
   <!-- STEP 1 -->
   <div class="screen active" id="screen1">
-    <div class="screen-title">Nuovo ordine</div>
+    <!-- NAV TOP -->
+    <div class="nav-bar">
+      <div class="screen-title" style="margin-bottom:0">Nuovo ordine</div>
+      <div class="nav-bar-right">
+        <button class="btn btn-primary" onclick="go2()">Avanti →</button>
+      </div>
+    </div>
     <div class="screen-sub">Seleziona tipo e inserisci i dati</div>
     <div class="type-grid">
       <div class="type-card" id="card-a" onclick="setType('asporto')"><div class="icon">🍕</div><div class="label">Asporto</div><div class="desc">Ritiro in pizzeria</div></div>
@@ -217,12 +230,18 @@ textarea.notes:focus{border-color:var(--text)}
         <textarea id="order-notes" class="notes" placeholder="Es. citofono Rossi, senza suonare..." style="min-height:64px"></textarea>
       </div>
     </div>
-    <div class="actions"><button class="btn btn-primary" onclick="go2()">Avanti →</button></div>
   </div>
 
   <!-- STEP 2 -->
   <div class="screen" id="screen2">
-    <div class="screen-title">Prodotti</div>
+    <!-- NAV TOP -->
+    <div class="nav-bar">
+      <button class="btn btn-outline" onclick="go1()">← Indietro</button>
+      <div class="screen-title" style="margin-bottom:0;flex:1;text-align:center">Prodotti</div>
+      <div class="nav-bar-right">
+        <button class="btn btn-primary" onclick="go3()">Totale →</button>
+      </div>
+    </div>
     <div class="screen-sub">Aggiungi pizze, focacce, calzoni e bibite</div>
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
@@ -236,15 +255,18 @@ textarea.notes:focus{border-color:var(--text)}
       <div class="drinks-head">🥤 Bibite</div>
       <div id="dgrid"></div>
     </div>
-    <div class="actions">
-      <button class="btn btn-outline" onclick="go1()">← Indietro</button>
-      <button class="btn btn-primary" onclick="go3()">Totale →</button>
-    </div>
   </div>
 
   <!-- STEP 3 -->
   <div class="screen" id="screen3">
-    <div class="screen-title">Riepilogo</div>
+    <!-- NAV TOP -->
+    <div class="nav-bar">
+      <button class="btn btn-outline" onclick="go2()">← Indietro</button>
+      <div class="screen-title" style="margin-bottom:0;flex:1;text-align:center">Riepilogo</div>
+      <div class="nav-bar-right">
+        <button class="btn btn-danger btn-sm" onclick="newOrder()">Nuovo ordine</button>
+      </div>
+    </div>
     <div class="screen-sub">Controlla e stampa l'ordine</div>
     <div class="printer-bar">
       <label>IP Stampante</label>
@@ -270,16 +292,14 @@ textarea.notes:focus{border-color:var(--text)}
     <button class="btn btn-print" onclick="doPrint()">🖨️ Stampa scontrino</button>
     <button class="btn btn-print" onclick="openReceiptTab()" style="margin-top:8px;background:#333">🧾 Visualizza scontrino</button>
     <button class="btn btn-print" onclick="exportCsv()" style="margin-top:8px;background:#1a5c2a">📥 Esporta per Excel</button>
-    <div class="actions" style="margin-top:14px">
-      <button class="btn btn-outline" onclick="go2()">← Indietro</button>
-      <button class="btn btn-danger btn-sm" onclick="newOrder()" style="margin-left:auto">Nuovo ordine</button>
-    </div>
   </div>
 
   <!-- STEP 4 — STORICO -->
   <div class="screen" id="screen4">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px">
-      <div class="screen-title" style="margin-bottom:0">Storico ordini</div>
+    <!-- NAV TOP -->
+    <div class="nav-bar">
+      <button class="btn btn-outline" onclick="backFromHistory()">← Torna all'ordine</button>
+      <div class="screen-title" style="margin-bottom:0;flex:1;text-align:center">Storico ordini</div>
     </div>
     <div class="screen-sub">Tutti gli ordini salvati</div>
 
@@ -302,10 +322,6 @@ textarea.notes:focus{border-color:var(--text)}
     </div>
 
     <div id="hist-list"></div>
-
-    <div class="actions">
-      <button class="btn btn-outline" onclick="backFromHistory()">← Torna all'ordine</button>
-    </div>
   </div>
 
 </div>
@@ -474,34 +490,23 @@ function pTotal(p){
   return base+ex+cx;
 }
 
-// STORAGE
 async function loadHistory(){
-  try{
-    const r=await window.storage.get('history_v1');
-    HISTORY=r?JSON.parse(r.value):[];
-  }catch(e){HISTORY=[];}
+  try{const r=await window.storage.get('history_v1');HISTORY=r?JSON.parse(r.value):[];}catch(e){HISTORY=[];}
   updateHistBadge();
 }
 async function saveHistory(){
   try{await window.storage.set('history_v1',JSON.stringify(HISTORY));}catch(e){}
   updateHistBadge();
 }
-function updateHistBadge(){
-  document.getElementById('histCount').textContent=HISTORY.length;
-}
+function updateHistBadge(){document.getElementById('histCount').textContent=HISTORY.length;}
 
 function calcOrderTotal(ord){
   const pSum=ord.pizzas.reduce((s,p)=>s+p.total,0);
   const ent=ord.pizzas.filter(p=>p.itemType!=='Farinata').length;
   let dSum=0,omUsed=0;
   (ord.drinks||[]).forEach(d=>{
-    if(d.isOmaggio){
-      const free=Math.min(d.qty,Math.max(0,ent-omUsed));
-      omUsed+=free;
-      dSum+=(d.qty-free)*d.n;
-    }else{
-      dSum+=(ent>0?d.cp:d.n)*d.qty;
-    }
+    if(d.isOmaggio){const free=Math.min(d.qty,Math.max(0,ent-omUsed));omUsed+=free;dSum+=(d.qty-free)*d.n;}
+    else{dSum+=(ent>0?d.cp:d.n)*d.qty;}
   });
   return pSum+dSum+(ord.delivery||0);
 }
@@ -514,48 +519,16 @@ function saveOrderToHistory(){
   const via=isC?document.getElementById('c-via').value:'';
   const paese=isC?document.getElementById('c-paese').value:'';
   const del=parseFloat(document.getElementById('del-cost')?.value||0)||0;
-  const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
-
-  const pizzasSnap=S.pizzas.map(p=>({
-    name:p.item.name,
-    itemType:p.item.type,
-    imp:p.imp,
-    extras:p.extras.map(e=>e.name),
-    custom:p.custom.filter(c=>c.trim()),
-    notes:p.notes,
-    total:pTotal(p)
-  }));
-
+  const pizzasSnap=S.pizzas.map(p=>({name:p.item.name,itemType:p.item.type,imp:p.imp,extras:p.extras.map(e=>e.name),custom:p.custom.filter(c=>c.trim()),notes:p.notes,total:pTotal(p)}));
   const drinksSnap=[];
-  Object.entries(S.drinks).forEach(([code,qty])=>{
-    if(!qty)return;
-    const d=DRINKS.find(x=>x.code===code);
-    if(!d)return;
-    drinksSnap.push({name:d.name,qty,isOmaggio:d.cp==='Omaggio',cp:typeof d.cp==='number'?d.cp:0,n:d.n});
-  });
-
-  const ord={
-    id:'ord_'+Date.now(),
-    ts:Date.now(),
-    type:S.type,
-    nome:nome||'—',
-    tel:tel||'',
-    ora:ora||'',
-    via:via||'',
-    paese:paese||'',
-    pay:S.pay||'',
-    notes:document.getElementById('order-notes').value||'',
-    pizzas:pizzasSnap,
-    drinks:drinksSnap,
-    delivery:del,
-  };
+  Object.entries(S.drinks).forEach(([code,qty])=>{if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;drinksSnap.push({name:d.name,qty,isOmaggio:d.cp==='Omaggio',cp:typeof d.cp==='number'?d.cp:0,n:d.n});});
+  const ord={id:'ord_'+Date.now(),ts:Date.now(),type:S.type,nome:nome||'—',tel:tel||'',ora:ora||'',via:via||'',paese:paese||'',pay:S.pay||'',notes:document.getElementById('order-notes').value||'',pizzas:pizzasSnap,drinks:drinksSnap,delivery:del};
   ord.total=calcOrderTotal(ord);
   HISTORY.unshift(ord);
   if(HISTORY.length>200)HISTORY.pop();
   saveHistory();
 }
 
-// STEP 1
 function setType(t){
   S.type=t;
   document.getElementById('card-a').classList.toggle('selected',t==='asporto');
@@ -574,23 +547,18 @@ function go2(){
   showStep(2);renderDrinks();renderPizzas();
 }
 
-// STEP 2
 function doSearch(q){
   const box=document.getElementById('sres');
   if(!q){box.style.display='none';return;}
   const r=MENU.filter(m=>m.name.toLowerCase().includes(q.toLowerCase())).slice(0,8);
   if(!r.length){box.style.display='none';return;}
-  box.innerHTML=r.map(m=>{
-    const pr=m.m!=null?f(m.m):m.i!=null?f(m.i):'-';
-    return`<div class="s-item" onclick="addPizza('${m.code}')"><div><div class="sn">${m.name}</div><div class="st">${m.type}</div></div><div class="sp">${pr}</div></div>`;
-  }).join('');
+  box.innerHTML=r.map(m=>{const pr=m.m!=null?f(m.m):m.i!=null?f(m.i):'-';return`<div class="s-item" onclick="addPizza('${m.code}')"><div><div class="sn">${m.name}</div><div class="st">${m.type}</div></div><div class="sp">${pr}</div></div>`;}).join('');
   box.style.display='block';
 }
 document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))document.getElementById('sres').style.display='none';});
 
 function addPizza(code){
-  const item=MENU.find(m=>m.code===code);
-  if(!item)return;
+  const item=MENU.find(m=>m.code===code);if(!item)return;
   const imp=item.m!=null?'mattone':item.i!=null?'integrale':null;
   S.pizzas.push({item,imp,extras:[],custom:['','',''],notes:'',id:S.uid++,collapsed:false});
   document.getElementById('sres').style.display='none';
@@ -600,10 +568,7 @@ function addPizza(code){
 
 function renderPizzas(){
   const el=document.getElementById('plist');
-  if(!S.pizzas.length){
-    el.innerHTML=`<div class="empty"><div class="ei">🍕</div><p>Nessun prodotto aggiunto</p><p style="font-size:.8rem;margin-top:4px">Cerca nel campo sopra</p></div>`;
-    updateOmaggioBadge();return;
-  }
+  if(!S.pizzas.length){el.innerHTML=`<div class="empty"><div class="ei">🍕</div><p>Nessun prodotto aggiunto</p><p style="font-size:.8rem;margin-top:4px">Cerca nel campo sopra</p></div>`;updateOmaggioBadge();return;}
   el.innerHTML=S.pizzas.map(p=>{
     const item=p.item;
     const opts=[{k:'tegamino',l:'Tegamino',v:item.t},{k:'mattone',l:'Mattone',v:item.m},{k:'integrale',l:'Integrale',v:item.i}].filter(o=>o.v!=null);
@@ -611,7 +576,7 @@ function renderPizzas(){
     const exHtml=EXTRAS.map(e=>{const on=p.extras.find(x=>x.name===e.name);return`<button class="tag ${on?'on':''}" onclick="togEx(${p.id},'${e.name}',${e.p})">${e.name} +${f(e.p)}</button>`;}).join('');
     const cxHtml=p.custom.map((v,i)=>`<div class="ce-row"><input type="text" placeholder="Ingrediente ${i+1} (+€ 1,00)" value="${v}" oninput="setCx(${p.id},${i},this.value)"></div>`).join('');
     const collExtras=[...p.extras.map(e=>e.name),...p.custom.filter(c=>c.trim())];
-    const collSub=[p.imp?p.imp.charAt(0).toUpperCase()+p.imp.slice(1):'',...collExtras].filter(Boolean).join(', ');
+    const collSub=[p.imp?p.imp.charAt(0).toUpperCase()+p.imp.slice(1):'', ...collExtras].filter(Boolean).join(', ');
     return`<div class="pizza-card ${p.collapsed?'pc-collapsed':''}" id="pc${p.id}">
       <div class="pc-head">
         <div style="flex:1;min-width:0"><div class="pc-name">${item.name}</div><div class="pc-type" id="pcsub${p.id}">${p.collapsed&&collSub?collSub:item.type}</div></div>
@@ -661,7 +626,6 @@ function renderDrinks(){
 }
 function chDrink(code,delta){S.drinks[code]=Math.max(0,(S.drinks[code]||0)+delta);const el=document.getElementById('dq'+code);if(el)el.textContent=S.drinks[code];updateOmaggioBadge();}
 
-// STEP 3
 function go3(){renderSummary();showStep(3);setTimeout(()=>{saveOrderToHistory();const ind=document.getElementById('save-indicator');ind.style.display='block';setTimeout(()=>{ind.style.display='none';},3000);},200);}
 
 function renderSummary(){
@@ -714,17 +678,12 @@ function calcTotal(){
   const pSum=S.pizzas.reduce((s,p)=>s+pTotal(p),0);
   const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
   let dSum=0,omU=0;
-  Object.entries(S.drinks).forEach(([code,qty])=>{
-    if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;
-    if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));omU+=free;dSum+=(qty-free)*d.n;}
-    else dSum+=(ent>0?d.cp:d.n)*qty;
-  });
+  Object.entries(S.drinks).forEach(([code,qty])=>{if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));omU+=free;dSum+=(qty-free)*d.n;}else dSum+=(ent>0?d.cp:d.n)*qty;});
   const del=parseFloat(document.getElementById('del-cost')?.value||0)||0;
   document.getElementById('tot').textContent=f(pSum+dSum+del);
 }
 function saveIp(){const ip=document.getElementById('printer-ip').value.trim();if(ip)localStorage.setItem('printer_ip',ip);document.getElementById('pstatus').innerHTML='';}
 
-// STORICO
 function toggleHistory(){
   const scr=document.getElementById('screen4');
   if(scr.classList.contains('active')){backFromHistory();}
@@ -747,29 +706,20 @@ function renderHistory(){
   const q=(document.getElementById('hist-search')?.value||'').toLowerCase();
   const filter=document.getElementById('hist-filter')?.value||'';
   const sort=document.getElementById('hist-sort')?.value||'newest';
-
   let list=[...HISTORY];
   if(filter)list=list.filter(o=>o.type===filter);
   if(q)list=list.filter(o=>(o.nome+o.via+o.paese+o.tel).toLowerCase().includes(q));
-
   if(sort==='oldest')list.sort((a,b)=>a.ts-b.ts);
   else if(sort==='highest')list.sort((a,b)=>b.total-a.total);
   else if(sort==='lowest')list.sort((a,b)=>a.total-b.total);
   else list.sort((a,b)=>b.ts-a.ts);
-
-  // Stats
   const totalRev=HISTORY.reduce((s,o)=>s+o.total,0);
   const avgTot=HISTORY.length?totalRev/HISTORY.length:0;
   document.getElementById('histStats').innerHTML=`
     <div class="hs-card"><div class="hs-num">${HISTORY.length}</div><div class="hs-lbl">Ordini totali</div></div>
     <div class="hs-card"><div class="hs-num">${f(totalRev)}</div><div class="hs-lbl">Incasso totale</div></div>
     <div class="hs-card"><div class="hs-num">${f(avgTot)}</div><div class="hs-lbl">Media ordine</div></div>`;
-
-  if(!list.length){
-    document.getElementById('hist-list').innerHTML=`<div class="no-orders"><div class="ni">📋</div><p>Nessun ordine trovato</p></div>`;
-    return;
-  }
-
+  if(!list.length){document.getElementById('hist-list').innerHTML=`<div class="no-orders"><div class="ni">📋</div><p>Nessun ordine trovato</p></div>`;return;}
   document.getElementById('hist-list').innerHTML=list.map(ord=>{
     const exp=expandedOrders[ord.id];
     const dt=new Date(ord.ts);
@@ -778,69 +728,30 @@ function renderHistory(){
     let meta=`${dateStr} ${timeStr}`;
     if(ord.ora)meta+=` · Orario consegna: ${ord.ora}`;
     if(ord.tel)meta+=` · ${ord.tel}`;
-
     let bodyHtml='';
     if(exp){
-      if(ord.pizzas.length){
-        bodyHtml+=`<div class="oc-section-lbl">Prodotti</div>`;
-        ord.pizzas.forEach(p=>{
-          const extras=[...p.extras,...p.custom].filter(Boolean);
-          bodyHtml+=`<div class="oc-item-row"><span class="oc-item-name">${p.name} <span style="color:var(--text-dim);font-size:.78rem">(${p.imp})</span>${extras.length?' <span style="color:var(--text-dim);font-size:.75rem">+ '+extras.join(', ')+'</span>':''}</span><span class="oc-item-price">${f(p.total)}</span></div>`;
-          if(p.notes)bodyHtml+=`<div style="font-size:.75rem;color:var(--text-dim);padding-left:8px;margin-bottom:2px">📝 ${p.notes}</div>`;
-        });
-      }
-      if(ord.drinks&&ord.drinks.length){
-        bodyHtml+=`<div class="oc-section-lbl">Bibite</div>`;
-        ord.drinks.forEach(d=>bodyHtml+=`<div class="oc-item-row"><span class="oc-item-name">${d.name} ×${d.qty}</span><span class="oc-item-price">${d.isOmaggio?'Omaggio':f(d.cp*d.qty)}</span></div>`);
-      }
+      if(ord.pizzas.length){bodyHtml+=`<div class="oc-section-lbl">Prodotti</div>`;ord.pizzas.forEach(p=>{const extras=[...p.extras,...p.custom].filter(Boolean);bodyHtml+=`<div class="oc-item-row"><span class="oc-item-name">${p.name} <span style="color:var(--text-dim);font-size:.78rem">(${p.imp})</span>${extras.length?' <span style="color:var(--text-dim);font-size:.75rem">+ '+extras.join(', ')+'</span>':''}</span><span class="oc-item-price">${f(p.total)}</span></div>`;if(p.notes)bodyHtml+=`<div style="font-size:.75rem;color:var(--text-dim);padding-left:8px;margin-bottom:2px">📝 ${p.notes}</div>`;});}
+      if(ord.drinks&&ord.drinks.length){bodyHtml+=`<div class="oc-section-lbl">Bibite</div>`;ord.drinks.forEach(d=>bodyHtml+=`<div class="oc-item-row"><span class="oc-item-name">${d.name} ×${d.qty}</span><span class="oc-item-price">${d.isOmaggio?'Omaggio':f(d.cp*d.qty)}</span></div>`);}
       if(ord.delivery>0)bodyHtml+=`<div class="oc-item-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)"><span class="oc-item-name">Consegna</span><span class="oc-item-price">${f(ord.delivery)}</span></div>`;
       if(ord.pay)bodyHtml+=`<div class="oc-item-row"><span class="oc-item-name" style="color:var(--text-dim)">Pagamento</span><span class="oc-item-price" style="font-weight:400">${ord.pay}</span></div>`;
       if(ord.notes)bodyHtml+=`<div style="font-size:.8rem;color:var(--text-dim);margin-top:8px;padding:8px;background:var(--surface);border-radius:4px">📝 ${ord.notes}</div>`;
-      bodyHtml+=`<div class="oc-actions">
-        <button class="btn-del-order" onclick="deleteOrder('${ord.id}',event)">Elimina</button>
-      </div>`;
+      bodyHtml+=`<div class="oc-actions"><button class="btn-del-order" onclick="deleteOrder('${ord.id}',event)">Elimina</button></div>`;
     }
-
     const addrLine=ord.type==='consegna'&&ord.via?`<span style="font-size:.75rem;color:var(--text-dim)"> · ${ord.via}${ord.paese?', '+ord.paese:''}</span>`:'';
-
     return`<div class="order-card" id="oc_${ord.id}" onclick="toggleOrder('${ord.id}')">
       <div class="oc-head ${exp?'':'collapsed'}">
-        <div class="oc-left">
-          <div class="oc-name">${ord.nome}${addrLine}</div>
-          <div class="oc-meta">${meta}</div>
-        </div>
-        <div class="oc-right">
-          <span class="oc-badge ${ord.type}">${ord.type==='consegna'?'🛵 Consegna':'🍕 Asporto'}</span>
-          <span class="oc-total">${f(ord.total)}</span>
-          <span style="color:var(--text-dim);font-size:.8rem">${exp?'▲':'▼'}</span>
-        </div>
+        <div class="oc-left"><div class="oc-name">${ord.nome}${addrLine}</div><div class="oc-meta">${meta}</div></div>
+        <div class="oc-right"><span class="oc-badge ${ord.type}">${ord.type==='consegna'?'🛵 Consegna':'🍕 Asporto'}</span><span class="oc-total">${f(ord.total)}</span><span style="color:var(--text-dim);font-size:.8rem">${exp?'▲':'▼'}</span></div>
       </div>
       ${exp?`<div class="oc-body">${bodyHtml}</div>`:''}
     </div>`;
   }).join('');
 }
 
-function toggleOrder(id){
-  expandedOrders[id]=!expandedOrders[id];
-  renderHistory();
-}
+function toggleOrder(id){expandedOrders[id]=!expandedOrders[id];renderHistory();}
+function deleteOrder(id,e){e.stopPropagation();if(!confirm('Eliminare questo ordine?'))return;HISTORY=HISTORY.filter(o=>o.id!==id);delete expandedOrders[id];saveHistory();renderHistory();}
+function clearAllHistory(){if(!confirm('Svuotare tutto lo storico? L\'operazione non è reversibile.'))return;HISTORY=[];expandedOrders={};saveHistory();renderHistory();}
 
-function deleteOrder(id,e){
-  e.stopPropagation();
-  if(!confirm('Eliminare questo ordine?'))return;
-  HISTORY=HISTORY.filter(o=>o.id!==id);
-  delete expandedOrders[id];
-  saveHistory();
-  renderHistory();
-}
-
-function clearAllHistory(){
-  if(!confirm('Svuotare tutto lo storico? L\'operazione non è reversibile.'))return;
-  HISTORY=[];expandedOrders={};
-  saveHistory();renderHistory();
-}
-
-// NAV
 function showStep(n){
   document.querySelectorAll('.screen').forEach((s,i)=>s.classList.toggle('active',i+1===n));
   document.getElementById('stepInd').style.display='flex';
@@ -860,15 +771,13 @@ function newOrder(){
   showStep(1);
 }
 
-// PRINT / EXPORT (invariati rispetto all'originale)
 async function doPrint(){
   const ip=document.getElementById('printer-ip').value.trim();
   if(!ip){alert("Inserisci l'IP della stampante");return;}
   const status=document.getElementById('pstatus');
   status.innerHTML='<span style="color:#888">Connessione...</span>';
   try{
-    const receipt=buildReceipt();
-    const xml=buildEposXml(receipt);
+    const receipt=buildReceipt();const xml=buildEposXml(receipt);
     const url=`http://${ip}/cgi-bin/epos/service.cgi?devid=local_printer&timeout=10000`;
     const resp=await fetch(url,{method:'POST',headers:{'Content-Type':'text/xml; charset=utf-8','SOAPAction':'""'},body:xml});
     if(resp.ok){status.innerHTML='<span class="status-ok">✓ Stampato</span>';setTimeout(()=>{status.innerHTML='';},3000);}
@@ -885,12 +794,8 @@ function buildReceipt(){
   if(isC){nome=document.getElementById('c-nome').value||'—';tel=document.getElementById('c-tel').value||'—';ora=document.getElementById('c-ora').value||'—';const via=document.getElementById('c-via').value||'';const paese=document.getElementById('c-paese').value||'';extra=`${via}, ${paese}`;}
   else{nome=document.getElementById('a-nome').value||'—';tel=document.getElementById('a-tel').value||'—';ora=document.getElementById('a-ora').value||'—';}
   const lines=[];
-  lines.push({t:'header',text:'To.To Alpignano'});
-  lines.push({t:'sub',text:dateStr+' '+timeStr});
-  lines.push({t:'separator'});
-  lines.push({t:'kv',k:isC?'CONSEGNA':'ASPORTO',v:ora});
-  lines.push({t:'kv',k:'NOME',v:nome});
-  lines.push({t:'kv',k:'TEL',v:tel});
+  lines.push({t:'header',text:'To.To Alpignano'});lines.push({t:'sub',text:dateStr+' '+timeStr});lines.push({t:'separator'});
+  lines.push({t:'kv',k:isC?'CONSEGNA':'ASPORTO',v:ora});lines.push({t:'kv',k:'NOME',v:nome});lines.push({t:'kv',k:'TEL',v:tel});
   if(isC&&extra)lines.push({t:'kv',k:'INDIRIZZO',v:extra});
   if(isC&&S.pay)lines.push({t:'kv',k:'PAGAMENTO',v:S.pay});
   lines.push({t:'separator'});
@@ -898,28 +803,9 @@ function buildReceipt(){
   const CAT_ORDER=['Pizza Rossa','Novità Pizza Rossa','Pizza Bianca',"Ta' Pizza Bianca",'Pizza Baby','Calzone','Focaccia','Focaccia Farcita','Chiacchera Fritta','Farinata'];
   const grouped={};CAT_ORDER.forEach(c=>grouped[c]=[]);
   S.pizzas.forEach(p=>{if(!grouped[p.item.type])grouped[p.item.type]=[];grouped[p.item.type].push(p);});
-  CAT_ORDER.forEach(cat=>{
-    const items=grouped[cat];if(!items||!items.length)return;
-    lines.push({t:'section',text:cat.toUpperCase()});
-    items.forEach(p=>{
-      lines.push({t:'item',name:p.item.name,sub:`(${p.imp})`,price:f(pTotal(p))});
-      const all=[...p.extras.map(e=>e.name),...p.custom.filter(c=>c.trim())];
-      if(all.length)lines.push({t:'note',text:'+ '+all.join(', ')});
-      if(p.notes)lines.push({t:'note',text:'📝 '+p.notes});
-    });
-  });
+  CAT_ORDER.forEach(cat=>{const items=grouped[cat];if(!items||!items.length)return;lines.push({t:'section',text:cat.toUpperCase()});items.forEach(p=>{lines.push({t:'item',name:p.item.name,sub:`(${p.imp})`,price:f(pTotal(p))});const all=[...p.extras.map(e=>e.name),...p.custom.filter(c=>c.trim())];if(all.length)lines.push({t:'note',text:'+ '+all.join(', ')});if(p.notes)lines.push({t:'note',text:'📝 '+p.notes});});});
   const de=Object.entries(S.drinks).filter(([,q])=>q>0);
-  if(de.length){
-    lines.push({t:'section',text:'BIBITE'});
-    let omU=0;
-    de.forEach(([code,qty])=>{
-      const d=DRINKS.find(x=>x.code===code);if(!d)return;
-      let ps;
-      if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));const paid=qty-free;omU+=free;if(free>0&&paid===0)ps='Omaggio';else if(free>0&&paid>0)ps=`x${free} Om. + ${f(paid*d.n)}`;else ps=f(qty*d.n);}
-      else ps=f((ent>0?d.cp:d.n)*qty);
-      lines.push({t:'item',name:d.name+' x'+qty,sub:'',price:ps});
-    });
-  }
+  if(de.length){lines.push({t:'section',text:'BIBITE'});let omU=0;de.forEach(([code,qty])=>{const d=DRINKS.find(x=>x.code===code);if(!d)return;let ps;if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));const paid=qty-free;omU+=free;if(free>0&&paid===0)ps='Omaggio';else if(free>0&&paid>0)ps=`x${free} Om. + ${f(paid*d.n)}`;else ps=f(qty*d.n);}else ps=f((ent>0?d.cp:d.n)*qty);lines.push({t:'item',name:d.name+' x'+qty,sub:'',price:ps});});}
   lines.push({t:'separator'});
   const del=parseFloat(document.getElementById('del-cost')?.value||0)||0;
   if(del>0)lines.push({t:'kv',k:'Consegna',v:f(del)});
@@ -927,8 +813,7 @@ function buildReceipt(){
   let dSum=0,omU2=0;
   Object.entries(S.drinks).forEach(([code,qty])=>{if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU2));omU2+=free;dSum+=(qty-free)*d.n;}else dSum+=(ent>0?d.cp:d.n)*qty;});
   lines.push({t:'total',text:'TOTALE',value:f(pSum+dSum+del)});
-  lines.push({t:'separator'});
-  lines.push({t:'sub',text:'Grazie!'});
+  lines.push({t:'separator'});lines.push({t:'sub',text:'Grazie!'});
   return lines;
 }
 
@@ -1005,7 +890,8 @@ function exportCsv(){
   a.href=url;a.download=`ordine_${nome.replace(/\s+/g,'_')||tipoOrdine.toLowerCase()}_${dateStr2}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
-// INIT
 loadHistory();
 showStep(1);
 </script>
+</head>
+</html>
