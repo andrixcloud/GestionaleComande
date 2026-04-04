@@ -1,0 +1,1011 @@
+
+<style>
+:root{--bg:#fff;--surface:#f7f7f7;--border:#e0e0e0;--border-dark:#bbb;--text:#111;--text-dim:#888;--accent:#111;--accent-inv:#fff;--danger:#cc0000;--radius:6px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5}
+header{background:var(--text);color:var(--accent-inv);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:10px}
+.btn-history{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:var(--radius);padding:6px 12px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px}
+.btn-history:hover{background:rgba(255,255,255,.25)}
+.history-badge{background:#fff;color:#111;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800}
+.step-indicator{display:flex;align-items:center;gap:6px}
+.step-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;border:2px solid rgba(255,255,255,.3);color:rgba(255,255,255,.4)}
+.step-dot.active{border-color:#fff;color:#fff}
+.step-dot.done{background:#fff;color:#111;border-color:#fff}
+.step-line{width:16px;height:1px;background:rgba(255,255,255,.2)}
+.step-line.done{background:#fff}
+.container{max-width:680px;margin:0 auto;padding:20px 16px 40px}
+.screen{display:none}
+.screen.active{display:block;animation:up .2s ease}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.screen-title{font-size:1.3rem;font-weight:700;margin-bottom:4px}
+.screen-sub{color:var(--text-dim);font-size:.85rem;margin-bottom:22px}
+.section-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:8px}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.type-card{border:2px solid var(--border);border-radius:var(--radius);padding:22px 16px;cursor:pointer;text-align:center;transition:border-color .15s}
+.type-card:hover{border-color:var(--border-dark)}
+.type-card.selected{border-color:var(--text);background:var(--surface)}
+.type-card .icon{font-size:2rem;margin-bottom:8px}
+.type-card .label{font-weight:700;font-size:.95rem}
+.type-card .desc{color:var(--text-dim);font-size:.8rem;margin-top:2px}
+.form-grid{display:grid;gap:12px;margin-bottom:20px}
+.form-grid.cols2{grid-template-columns:1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim)}
+.form-group input,.form-group select{border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:.95rem;font-family:inherit;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s}
+.form-group input:focus,.form-group select:focus{border-color:var(--text)}
+.payment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pay-btn{padding:10px 8px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text-dim)}
+.pay-btn:hover{border-color:var(--border-dark);color:var(--text)}
+.pay-btn.selected{border-color:var(--text);color:var(--text);background:var(--surface)}
+.btn{padding:11px 22px;border-radius:var(--radius);font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s}
+.btn:active{opacity:.75}
+.btn-primary{background:var(--text);color:var(--accent-inv)}
+.btn-outline{background:var(--bg);color:var(--text);border:1.5px solid var(--border-dark)}
+.btn-danger{background:var(--bg);color:var(--danger);border:1.5px solid #eab;font-size:.8rem;padding:7px 12px}
+.btn-print{background:var(--text);color:#fff;width:100%;justify-content:center;padding:14px;font-size:1rem}
+.btn-sm{padding:6px 12px;font-size:.8rem}
+.actions{display:flex;gap:10px;margin-top:24px;align-items:center;flex-wrap:wrap}
+.divider{height:1px;background:var(--border);margin:20px 0}
+.search-wrap{position:relative;margin-bottom:14px}
+.search-wrap input{width:100%;border:1.5px solid var(--border-dark);border-radius:var(--radius);padding:11px 14px 11px 38px;font-size:.95rem;font-family:inherit;outline:none}
+.search-wrap input:focus{border-color:var(--text)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-dim);font-size:.9rem;pointer-events:none}
+.search-results{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg);border:1px solid var(--border-dark);border-radius:var(--radius);z-index:50;max-height:240px;overflow-y:auto;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.s-item{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);cursor:pointer}
+.s-item:last-child{border-bottom:none}
+.s-item:hover{background:var(--surface)}
+.s-item .sn{font-weight:600;font-size:.9rem}
+.s-item .st{color:var(--text-dim);font-size:.75rem}
+.s-item .sp{font-weight:700;font-size:.85rem}
+.pizza-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.pizza-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.pc-head{background:var(--surface);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.pc-name{font-weight:700;font-size:.95rem}
+.pc-type{color:var(--text-dim);font-size:.75rem}
+.pc-total{font-weight:800;font-size:1rem;margin-right:10px}
+.pc-body{padding:14px;display:flex;flex-direction:column;gap:12px}
+.tag-group{display:flex;flex-wrap:wrap;gap:6px}
+.tag{padding:5px 11px;border:1.5px solid var(--border);border-radius:20px;font-size:.78rem;font-weight:600;cursor:pointer;background:var(--bg);color:var(--text-dim);transition:all .15s}
+.tag:hover{border-color:var(--border-dark);color:var(--text)}
+.tag.on{border-color:var(--text);color:var(--text);background:var(--surface)}
+.custom-extras{display:flex;flex-direction:column;gap:6px}
+.ce-row{display:flex;gap:8px;align-items:center}
+.ce-row input{flex:1;border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;font-size:.85rem;font-family:inherit;outline:none}
+.ce-row input:focus{border-color:var(--text)}
+textarea.notes{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;font-size:.85rem;font-family:inherit;resize:vertical;min-height:54px;outline:none;background:var(--bg);color:var(--text)}
+textarea.notes:focus{border-color:var(--text)}
+.pc-collapse-btn{background:none;border:1.5px solid var(--border);border-radius:var(--radius);padding:4px 10px;font-size:.72rem;font-weight:700;cursor:pointer;color:var(--text-dim);font-family:inherit;transition:all .15s;white-space:nowrap}
+.pc-collapse-btn:hover{border-color:var(--border-dark);color:var(--text)}
+.pc-collapsed .pc-body{display:none}
+.pc-collapsed .pc-head{border-bottom:none}
+.omaggio-badge{display:inline-flex;align-items:center;gap:5px;background:#111;color:#fff;border-radius:20px;padding:3px 10px;font-size:.72rem;font-weight:700;letter-spacing:.04em}
+.omaggio-badge .ob-num{background:#fff;color:#111;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800}
+.omaggio-wrap{margin-bottom:10px;min-height:28px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.empty{text-align:center;padding:36px 20px;color:var(--text-dim)}
+.empty .ei{font-size:2.5rem;margin-bottom:10px}
+.drinks-section{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px}
+.drinks-head{background:var(--surface);padding:10px 14px;font-weight:700;font-size:.85rem;border-bottom:1px solid var(--border)}
+.drink-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)}
+.drink-row:last-child{border-bottom:none}
+.dr-name{font-size:.88rem;font-weight:600}
+.dr-price{color:var(--text-dim);font-size:.75rem}
+.qty-ctrl{display:flex;align-items:center;gap:10px}
+.qty-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border-dark);background:var(--bg);color:var(--text);font-size:1.1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.qty-btn:active{background:var(--surface)}
+.qty-val{min-width:20px;text-align:center;font-weight:700}
+.summary-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.si{border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px}
+.si-k{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim);margin-bottom:2px}
+.si-v{font-size:.88rem;font-weight:600}
+.summary-table{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px}
+.st-head{background:var(--surface);padding:10px 14px;font-weight:700;font-size:.85rem;border-bottom:1px solid var(--border)}
+.st-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 14px;border-bottom:1px solid var(--border);gap:10px}
+.st-row:last-child{border-bottom:none}
+.st-name{font-weight:600;font-size:.88rem}
+.st-detail{color:var(--text-dim);font-size:.75rem;margin-top:2px}
+.st-price{font-weight:700;font-size:.92rem;white-space:nowrap}
+.delivery-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--border);margin-top:4px}
+.delivery-row label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);white-space:nowrap}
+.delivery-row input{width:100px;border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;font-family:inherit;font-size:.9rem;outline:none}
+.delivery-row input:focus{border-color:var(--text)}
+.total-bar{background:var(--text);color:#fff;border-radius:var(--radius);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.total-label{font-size:.85rem;font-weight:600;opacity:.7}
+.total-amount{font-size:1.7rem;font-weight:800}
+.printer-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.printer-bar label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);white-space:nowrap}
+.printer-bar input{flex:1;min-width:140px;border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;font-family:inherit;font-size:.88rem;outline:none}
+.printer-bar input:focus{border-color:var(--text)}
+.printer-status{font-size:.78rem;margin-left:auto}
+.status-ok{color:#1a7a1a}
+.status-err{color:var(--danger)}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border:1px solid}
+.badge-a{border-color:var(--border-dark);color:var(--text)}
+.badge-c{border-color:var(--text);background:var(--text);color:#fff}
+
+/* STORICO */
+#screen4{display:none}
+#screen4.active{display:block;animation:up .2s ease}
+.history-toolbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.history-toolbar input{flex:1;min-width:160px;border:1.5px solid var(--border-dark);border-radius:var(--radius);padding:8px 12px;font-size:.88rem;font-family:inherit;outline:none}
+.history-toolbar input:focus{border-color:var(--text)}
+.history-toolbar select{border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;font-size:.85rem;font-family:inherit;outline:none;background:var(--bg);color:var(--text)}
+.hist-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.hs-card{background:var(--surface);border-radius:var(--radius);padding:12px;text-align:center}
+.hs-num{font-size:1.4rem;font-weight:800}
+.hs-lbl{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.order-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.order-card:hover{border-color:var(--border-dark)}
+.oc-head{background:var(--surface);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.oc-head.collapsed{border-bottom:none}
+.oc-left{flex:1}
+.oc-name{font-weight:700;font-size:.95rem}
+.oc-meta{color:var(--text-dim);font-size:.75rem;margin-top:2px}
+.oc-right{display:flex;align-items:center;gap:8px}
+.oc-total{font-weight:800;font-size:1rem}
+.oc-badge{padding:3px 8px;border-radius:20px;font-size:.68rem;font-weight:700;text-transform:uppercase}
+.oc-badge.asporto{background:#f0f0f0;color:#555;border:1px solid var(--border)}
+.oc-badge.consegna{background:#111;color:#fff}
+.oc-body{padding:12px 14px;border-top:1px solid var(--border)}
+.oc-item-row{display:flex;justify-content:space-between;font-size:.85rem;padding:3px 0}
+.oc-item-name{color:var(--text)}
+.oc-item-price{font-weight:600;color:var(--text-dim);white-space:nowrap}
+.oc-section-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim);margin:8px 0 4px}
+.oc-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn-reorder{background:var(--text);color:#fff;border:none;border-radius:var(--radius);padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-del-order{background:none;color:var(--danger);border:1px solid #eab;border-radius:var(--radius);padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit}
+.no-orders{text-align:center;padding:48px 20px;color:var(--text-dim)}
+.no-orders .ni{font-size:3rem;margin-bottom:12px}
+@media(max-width:520px){.form-grid.cols2{grid-template-columns:1fr}.hist-stats{grid-template-columns:1fr 1fr}}
+</style>
+
+<header>
+  <div class="logo">Ordini</div>
+  <div class="header-right">
+    <button class="btn-history" id="histBtn" onclick="toggleHistory()">📋 Storico <span class="history-badge" id="histCount">0</span></button>
+    <div class="step-indicator" id="stepInd">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-line" id="l12"></div>
+      <div class="step-dot" id="dot2">2</div>
+      <div class="step-line" id="l23"></div>
+      <div class="step-dot" id="dot3">3</div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- STEP 1 -->
+  <div class="screen active" id="screen1">
+    <div class="screen-title">Nuovo ordine</div>
+    <div class="screen-sub">Seleziona tipo e inserisci i dati</div>
+    <div class="type-grid">
+      <div class="type-card" id="card-a" onclick="setType('asporto')"><div class="icon">🍕</div><div class="label">Asporto</div><div class="desc">Ritiro in pizzeria</div></div>
+      <div class="type-card" id="card-c" onclick="setType('consegna')"><div class="icon">🛵</div><div class="label">Consegna</div><div class="desc">A domicilio</div></div>
+    </div>
+    <div id="fa" style="display:none">
+      <div class="form-grid cols2">
+        <div class="form-group"><label>Orario</label><input type="time" id="a-ora"></div>
+        <div class="form-group"><label>Nome</label><input type="text" id="a-nome" placeholder="Nome cliente"></div>
+        <div class="form-group" style="grid-column:span 2"><label>Telefono</label><input type="tel" id="a-tel" placeholder="+39 000 000 0000"></div>
+      </div>
+    </div>
+    <div id="fc" style="display:none">
+      <div class="form-grid">
+        <div class="form-grid cols2">
+          <div class="form-group"><label>Orario</label><input type="time" id="c-ora"></div>
+          <div class="form-group"><label>Nome campanello</label><input type="text" id="c-nome" placeholder="Cognome / interno"></div>
+        </div>
+        <div class="form-group"><label>Via e civico</label><input type="text" id="c-via" placeholder="Via Roma, 12"></div>
+        <div class="form-grid cols2">
+          <div class="form-group"><label>Città</label><input type="text" id="c-paese" placeholder="Città"></div>
+          <div class="form-group"><label>Telefono</label><input type="tel" id="c-tel" placeholder="+39 000"></div>
+        </div>
+        <div class="form-group"><label>Pagamento</label>
+          <div class="payment-grid">
+            <button class="pay-btn" onclick="setPay('Contanti')">💵 Contanti</button>
+            <button class="pay-btn" onclick="setPay('POS')">💳 POS</button>
+            <button class="pay-btn" onclick="setPay('Sati')">📱 Satispay</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="fnote" style="display:none">
+      <div class="form-group" style="margin-bottom:20px">
+        <label>Note ordine</label>
+        <textarea id="order-notes" class="notes" placeholder="Es. citofono Rossi, senza suonare..." style="min-height:64px"></textarea>
+      </div>
+    </div>
+    <div class="actions"><button class="btn btn-primary" onclick="go2()">Avanti →</button></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="screen" id="screen2">
+    <div class="screen-title">Prodotti</div>
+    <div class="screen-sub">Aggiungi pizze, focacce, calzoni e bibite</div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="srch" placeholder="Cerca nel menu..." oninput="doSearch(this.value)" autocomplete="off">
+      <div class="search-results" id="sres"></div>
+    </div>
+    <div class="omaggio-wrap" id="omaggio-wrap"></div>
+    <div class="pizza-list" id="plist"></div>
+    <div class="divider"></div>
+    <div class="drinks-section">
+      <div class="drinks-head">🥤 Bibite</div>
+      <div id="dgrid"></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="go1()">← Indietro</button>
+      <button class="btn btn-primary" onclick="go3()">Totale →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="screen" id="screen3">
+    <div class="screen-title">Riepilogo</div>
+    <div class="screen-sub">Controlla e stampa l'ordine</div>
+    <div class="printer-bar">
+      <label>IP Stampante</label>
+      <input type="text" id="printer-ip" placeholder="es. 192.168.1.100" value="" oninput="saveIp()">
+      <div class="printer-status" id="pstatus"></div>
+    </div>
+    <div class="summary-info" id="sinfo"></div>
+    <div id="snotes" style="display:none;border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:16px;background:var(--surface)"></div>
+    <div class="summary-table">
+      <div class="st-head">Prodotti</div>
+      <div id="sprod"></div>
+    </div>
+    <div id="del-row" style="display:none" class="delivery-row">
+      <label>Costo consegna</label>
+      <input type="number" id="del-cost" min="0" step="0.5" value="0" oninput="calcTotal()">
+      <span style="color:var(--text-dim)">€</span>
+    </div>
+    <div class="total-bar">
+      <div class="total-label">Totale ordine</div>
+      <div class="total-amount" id="tot">€ 0,00</div>
+    </div>
+    <div id="save-indicator" style="display:none;text-align:center;padding:8px;font-size:.8rem;color:#1a7a1a;font-weight:700;margin-bottom:8px">✓ Ordine salvato nello storico</div>
+    <button class="btn btn-print" onclick="doPrint()">🖨️ Stampa scontrino</button>
+    <button class="btn btn-print" onclick="openReceiptTab()" style="margin-top:8px;background:#333">🧾 Visualizza scontrino</button>
+    <button class="btn btn-print" onclick="exportCsv()" style="margin-top:8px;background:#1a5c2a">📥 Esporta per Excel</button>
+    <div class="actions" style="margin-top:14px">
+      <button class="btn btn-outline" onclick="go2()">← Indietro</button>
+      <button class="btn btn-danger btn-sm" onclick="newOrder()" style="margin-left:auto">Nuovo ordine</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 — STORICO -->
+  <div class="screen" id="screen4">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px">
+      <div class="screen-title" style="margin-bottom:0">Storico ordini</div>
+    </div>
+    <div class="screen-sub">Tutti gli ordini salvati</div>
+
+    <div class="hist-stats" id="histStats"></div>
+
+    <div class="history-toolbar">
+      <input type="text" id="hist-search" placeholder="Cerca per nome, indirizzo..." oninput="renderHistory()">
+      <select id="hist-filter" onchange="renderHistory()">
+        <option value="">Tutti i tipi</option>
+        <option value="asporto">Solo asporto</option>
+        <option value="consegna">Solo consegna</option>
+      </select>
+      <select id="hist-sort" onchange="renderHistory()">
+        <option value="newest">Più recenti</option>
+        <option value="oldest">Più vecchi</option>
+        <option value="highest">Importo ↓</option>
+        <option value="lowest">Importo ↑</option>
+      </select>
+      <button class="btn btn-danger btn-sm" onclick="clearAllHistory()">Svuota tutto</button>
+    </div>
+
+    <div id="hist-list"></div>
+
+    <div class="actions">
+      <button class="btn btn-outline" onclick="backFromHistory()">← Torna all'ordine</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const MENU=[
+  {code:"1001",name:"Anima e Core",type:"Pizza Rossa",t:4.5,m:5.5,i:6.5},
+  {code:"1002",name:"Principe",type:"Pizza Rossa",t:4.5,m:5.5,i:6.5},
+  {code:"1003",name:"Margherita",type:"Pizza Rossa",t:5.0,m:6.0,i:7.0},
+  {code:"1004",name:"Avida",type:"Pizza Rossa",t:6.5,m:7.5,i:8.5},
+  {code:"1005",name:"Funghi",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1006",name:"Pugliese",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1007",name:"Rucola",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1008",name:"Diavola",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1009",name:"Gorgo e Cipolle",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1010",name:"Milanese",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1011",name:"Napoletana",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1012",name:"Panna e Prosciutto",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1013",name:"Parmigiana",type:"Pizza Rossa",t:7.5,m:8.5,i:9.5},
+  {code:"1014",name:"Patate*",type:"Pizza Rossa",t:8.5,m:9.5,i:10.5},
+  {code:"1015",name:"Polpettosa*",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1016",name:"Prosciutto",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1017",name:"Salsiccia",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1018",name:"Siciliana",type:"Pizza Rossa",t:7.5,m:8.5,i:9.5},
+  {code:"1019",name:"Tedesca",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1020",name:"Tonno e Carciofini",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1021",name:"Tonno e Cipolla",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1022",name:"Tropeana",type:"Pizza Rossa",t:7.5,m:8.5,i:9.5},
+  {code:"1023",name:"Zingara",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1024",name:"Affumicata",type:"Pizza Rossa",t:7.5,m:8.5,i:9.5},
+  {code:"1025",name:"Bismark",type:"Pizza Rossa",t:8.0,m:9.0,i:10.0},
+  {code:"1026",name:"Capricciosa",type:"Pizza Rossa",t:8.0,m:9.0,i:10.0},
+  {code:"1027",name:"Gorgo e Salame",type:"Pizza Rossa",t:8.0,m:9.0,i:10.0},
+  {code:"1028",name:"Grigliata",type:"Pizza Rossa",t:7.5,m:8.5,i:9.5},
+  {code:"1029",name:"Porcini*",type:"Pizza Rossa",t:8.0,m:9.0,i:10.0},
+  {code:"1030",name:"Prosciutto e Funghi",type:"Pizza Rossa",t:7.5,m:8.5,i:9.5},
+  {code:"1031",name:"Suocero",type:"Pizza Rossa",t:7.5,m:8.5,i:9.5},
+  {code:"1032",name:"Totò",type:"Pizza Rossa",t:8.0,m:8.5,i:9.5},
+  {code:"1033",name:"Valdostana",type:"Pizza Rossa",t:7.5,m:8.5,i:9.5},
+  {code:"1034",name:"Bolognese",type:"Pizza Rossa",t:8.0,m:9.0,i:10.0},
+  {code:"1035",name:"Bresaola",type:"Pizza Rossa",t:8.0,m:9.0,i:10.0},
+  {code:"1036",name:"Idilliaca*",type:"Pizza Rossa",t:8.0,m:9.0,i:10.0},
+  {code:"1037",name:"Iliade",type:"Pizza Rossa",t:8.5,m:9.5,i:10.5},
+  {code:"1038",name:"Mediterranea*",type:"Pizza Rossa",t:10.0,m:11.0,i:12.0},
+  {code:"1039",name:"Odissea",type:"Pizza Rossa",t:8.0,m:9.0,i:10.0},
+  {code:"1040",name:"Sfiziosa",type:"Pizza Rossa",t:8.0,m:9.0,i:10.0},
+  {code:"1041",name:"Parma",type:"Pizza Rossa",t:9.0,m:10.0,i:11.0},
+  {code:"1042",name:"Bufala",type:"Pizza Rossa",t:9.0,m:10.0,i:11.0},
+  {code:"1043",name:"Miseria e Nobiltà",type:"Pizza Rossa",t:9.0,m:10.0,i:11.0},
+  {code:"1044",name:"Burrata",type:"Pizza Rossa",t:10.0,m:11.0,i:12.0},
+  {code:"1045",name:"Bacon",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1047",name:"Greca",type:"Pizza Rossa",t:7.0,m:8.0,i:9.0},
+  {code:"1048",name:"4 Stagioni",type:"Pizza Rossa",t:7.5,m:8.5,i:9.5},
+  {code:"1049",name:"4 Salumi",type:"Pizza Rossa",t:8.5,m:9.5,i:10.5},
+  {code:"1101",name:"Speck e Mascarpone",type:"Novità Pizza Rossa",t:8.0,m:9.0,i:10.0},
+  {code:"1102",name:"Crudo e Mascarpone",type:"Novità Pizza Rossa",t:9.0,m:10.0,i:11.0},
+  {code:"1103",name:"Buena",type:"Novità Pizza Rossa",t:9.0,m:10.0,i:11.0},
+  {code:"1104",name:"Crudo e Porcini",type:"Novità Pizza Rossa",t:9.0,m:10.0,i:11.0},
+  {code:"1105",name:"Casereccia",type:"Novità Pizza Rossa",t:9.0,m:10.0,i:11.0},
+  {code:"1106",name:"Caliente",type:"Novità Pizza Rossa",t:9.0,m:10.0,i:11.0},
+  {code:"1107",name:"Boscaiola",type:"Novità Pizza Rossa",t:10.0,m:11.0,i:12.0},
+  {code:"1108",name:"Glicine d'Oro",type:"Novità Pizza Rossa",t:10.0,m:11.0,i:12.0},
+  {code:"1109",name:"Gustosa",type:"Novità Pizza Rossa",t:10.0,m:11.0,i:12.0},
+  {code:"1110",name:"Smile",type:"Novità Pizza Rossa",t:10.0,m:11.0,i:12.0},
+  {code:"1301",name:"Biancaneve",type:"Pizza Bianca",t:6.0,m:7.0,i:8.0},
+  {code:"1302",name:"Margherita DOC",type:"Pizza Bianca",t:6.5,m:7.5,i:8.5},
+  {code:"1303",name:"Delicata",type:"Pizza Bianca",t:7.0,m:8.0,i:9.0},
+  {code:"1304",name:"Romagna Mia",type:"Pizza Bianca",t:7.0,m:8.0,i:9.0},
+  {code:"1305",name:"Tirolese",type:"Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1306",name:"Gorgo e Noci",type:"Pizza Bianca",t:7.0,m:8.0,i:9.0},
+  {code:"1307",name:"Gorgo e Pere",type:"Pizza Bianca",t:7.0,m:8.0,i:9.0},
+  {code:"1308",name:"4 Formaggi",type:"Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1309",name:"Carbonara",type:"Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1310",name:"Patapizza*",type:"Pizza Bianca",t:9.5,m:10.5,i:11.5},
+  {code:"1311",name:"Nazzarì",type:"Pizza Bianca",t:8.0,m:9.0,i:10.0},
+  {code:"1312",name:"Gamberetti e Rucola*",type:"Pizza Bianca",t:8.5,m:9.5,i:10.5},
+  {code:"1313",name:"Vesuvio (Pizza Doppia)",type:"Pizza Bianca",t:12.0,m:13.0,i:14.0},
+  {code:"1401",name:"Del Contadino",type:"Ta' Pizza Bianca",t:7.0,m:8.0,i:9.0},
+  {code:"1402",name:"Arlecchino",type:"Ta' Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1403",name:"Deliziosa",type:"Ta' Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1404",name:"Genovese",type:"Ta' Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1405",name:"Italiana",type:"Ta' Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1406",name:"Campagnola",type:"Ta' Pizza Bianca",t:8.5,m:9.5,i:10.5},
+  {code:"1407",name:"Naturale",type:"Ta' Pizza Bianca",t:8.5,m:9.5,i:10.5},
+  {code:"1408",name:"Spiritosa",type:"Ta' Pizza Bianca",t:8.5,m:9.5,i:10.5},
+  {code:"1409",name:"Bufalina",type:"Ta' Pizza Bianca",t:9.0,m:10.0,i:11.0},
+  {code:"1410",name:"Romantica",type:"Ta' Pizza Bianca",t:9.0,m:10.0,i:11.0},
+  {code:"1411",name:"Toscana",type:"Ta' Pizza Bianca",t:9.0,m:10.0,i:11.0},
+  {code:"1412",name:"Bufalo Bill",type:"Ta' Pizza Bianca",t:10.0,m:11.0,i:12.0},
+  {code:"1501",name:"Baby Margherita",type:"Pizza Baby",t:null,m:5.0,i:6.0},
+  {code:"1502",name:"Baby Olive",type:"Pizza Baby",t:null,m:5.0,i:6.0},
+  {code:"1503",name:"Baby Patatine",type:"Pizza Baby",t:null,m:5.5,i:6.5},
+  {code:"1504",name:"Baby Prosciutto",type:"Pizza Baby",t:null,m:5.5,i:6.5},
+  {code:"1505",name:"Baby Wurstel",type:"Pizza Baby",t:null,m:5.5,i:6.5},
+  {code:"1506",name:"Baby Fuori Menù",type:"Pizza Baby",t:null,m:5.5,i:6.5},
+  {code:"1600",name:"Foc Semplice",type:"Focaccia",t:null,m:6.5,i:7.0},
+  {code:"1601",name:"Foc Lardo",type:"Focaccia",t:null,m:8.5,i:9.5},
+  {code:"1602",name:"Foc Parma",type:"Focaccia",t:null,m:9.5,i:10.5},
+  {code:"1603",name:"Foc Milano",type:"Focaccia",t:null,m:8.0,i:9.0},
+  {code:"1604",name:"Foc Posillipo",type:"Focaccia",t:null,m:8.5,i:9.5},
+  {code:"1605",name:"Foc Golfo di Napoli",type:"Focaccia",t:null,m:9.0,i:10.0},
+  {code:"1606",name:"Foc Bell'Italia",type:"Focaccia",t:null,m:10.0,i:11.0},
+  {code:"1607",name:"Foc Nutella",type:"Focaccia",t:null,m:11.0,i:12.0},
+  {code:"1701",name:"Mozzarella e Cotto",type:"Focaccia Farcita",t:null,m:13.5,i:14.5},
+  {code:"1702",name:"Mozz., Crudo, Pomodorini, Insalata",type:"Focaccia Farcita",t:null,m:13.5,i:14.5},
+  {code:"1703",name:"Speck e Mascarpone",type:"Focaccia Farcita",t:null,m:13.5,i:14.5},
+  {code:"1704",name:"Mozzarella e Salsiccia",type:"Focaccia Farcita",t:null,m:13.5,i:14.5},
+  {code:"1705",name:"Mozz., Stracchino, Crudo, Rucola",type:"Focaccia Farcita",t:null,m:13.5,i:14.5},
+  {code:"1706",name:"Mozzarella, Tonno, Cipolla",type:"Focaccia Farcita",t:null,m:13.5,i:14.5},
+  {code:"1707",name:"Mozz., Gorgonzola, Asparagi, Crudo",type:"Focaccia Farcita",t:null,m:13.5,i:14.5},
+  {code:"1708",name:"Mascarpone, Crudo",type:"Focaccia Farcita",t:null,m:13.5,i:14.5},
+  {code:"1709",name:"Mozz., Mascarpone, Porcini, Crudo, Rucola",type:"Focaccia Farcita",t:null,m:13.5,i:14.5},
+  {code:"1801",name:"Calzone Levis",type:"Calzone",t:null,m:8.0,i:9.0},
+  {code:"1802",name:"Calzone Rifle",type:"Calzone",t:null,m:8.5,i:9.5},
+  {code:"1803",name:"Calzone Wrangler",type:"Calzone",t:null,m:8.5,i:9.5},
+  {code:"1804",name:"Calzone Roger",type:"Calzone",t:null,m:9.0,i:10.0},
+  {code:"1805",name:"Calzone a Sorpresa",type:"Calzone",t:null,m:9.0,i:10.0},
+  {code:"1806",name:"Calzone Originale",type:"Calzone",t:null,m:8.0,i:9.0},
+  {code:"1807",name:"Il Rotolo di Totò",type:"Calzone",t:null,m:8.5,i:9.5},
+  {code:"1808",name:"Calzone Napoletano",type:"Calzone",t:null,m:9.0,i:10.0},
+  {code:"1809",name:"La Scarpa di Totò",type:"Calzone",t:null,m:9.0,i:10.0},
+  {code:"1201",name:"Chiacchera Nutella",type:"Chiacchera Fritta",t:null,m:11.0,i:12.0},
+  {code:"1202",name:"Chiacchera Parma",type:"Chiacchera Fritta",t:null,m:10.5,i:11.5},
+  {code:"1203",name:"Salame Milano",type:"Chiacchera Fritta",t:null,m:9.5,i:10.5},
+  {code:"1204",name:"Chiacchera Speck",type:"Chiacchera Fritta",t:null,m:9.5,i:10.5},
+  {code:"1205",name:"Chiacchera Posillipo",type:"Chiacchera Fritta",t:null,m:9.5,i:10.5},
+  {code:"1206",name:"Chiacchera Italia",type:"Chiacchera Fritta",t:null,m:11.0,i:12.0},
+  {code:"1207",name:"Pizza Fritta",type:"Chiacchera Fritta",t:null,m:11.0,i:12.0},
+  {code:"81",name:"Farinata Semplice",type:"Farinata",t:null,m:4.0,i:null},
+  {code:"82a",name:"Farinata Farcita Stracchino",type:"Farinata",t:null,m:5.5,i:null},
+  {code:"82b",name:"Farinata Farcita Gorgonzola",type:"Farinata",t:null,m:5.5,i:null},
+];
+const DRINKS=[
+  {code:"2101",name:"Pepsi",cp:"Omaggio",n:2.5},
+  {code:"2100",name:"Birra 0,33 lattina",cp:"Omaggio",n:2.5},
+  {code:"2102",name:"Pepsi Max (Zero)",cp:"Omaggio",n:2.5},
+  {code:"2103",name:"Aranciata",cp:"Omaggio",n:2.5},
+  {code:"2104",name:"Seven Up",cp:"Omaggio",n:2.5},
+  {code:"2108",name:"Pepsi 00",cp:"Omaggio",n:2.5},
+  {code:"2105",name:"Estathé Limone",cp:0.5,n:2.5},
+  {code:"2106",name:"Estathé Pesca",cp:0.5,n:2.5},
+  {code:"2001",name:"Acqua Naturale 0,50cl",cp:"Omaggio",n:1.5},
+  {code:"2003",name:"Acqua Frizzante 0,50cl",cp:"Omaggio",n:1.5},
+];
+const EXTRAS=[
+  {name:"Mozzarella Fior di Latte",p:1.0},
+  {name:"Mozzarella di Bufala",p:3.0},
+  {name:"Burrata Pugliese (200g)",p:6.5},
+  {name:"Porcini",p:2.5},
+  {name:"taggiasche",p:2.0},
+  {name:"Patate Fritte",p:2.5},
+  {name:"Salsa Pomodoro",p:0.5},
+];
+
+let S={type:null,pay:null,pizzas:[],drinks:{},uid:1};
+let prevScreen=1;
+let HISTORY=[];
+let expandedOrders={};
+
+const f=n=>'€ '+n.toFixed(2).replace('.',',');
+function getPrice(item,imp){return imp==='tegamino'?item.t:imp==='integrale'?item.i:item.m}
+function pTotal(p){
+  const base=getPrice(p.item,p.imp)||0;
+  const ex=p.extras.reduce((s,e)=>s+e.p,0);
+  const cx=p.custom.filter(c=>c.trim()).length*1.0;
+  return base+ex+cx;
+}
+
+// STORAGE
+async function loadHistory(){
+  try{
+    const r=await window.storage.get('history_v1');
+    HISTORY=r?JSON.parse(r.value):[];
+  }catch(e){HISTORY=[];}
+  updateHistBadge();
+}
+async function saveHistory(){
+  try{await window.storage.set('history_v1',JSON.stringify(HISTORY));}catch(e){}
+  updateHistBadge();
+}
+function updateHistBadge(){
+  document.getElementById('histCount').textContent=HISTORY.length;
+}
+
+function calcOrderTotal(ord){
+  const pSum=ord.pizzas.reduce((s,p)=>s+p.total,0);
+  const ent=ord.pizzas.filter(p=>p.itemType!=='Farinata').length;
+  let dSum=0,omUsed=0;
+  (ord.drinks||[]).forEach(d=>{
+    if(d.isOmaggio){
+      const free=Math.min(d.qty,Math.max(0,ent-omUsed));
+      omUsed+=free;
+      dSum+=(d.qty-free)*d.n;
+    }else{
+      dSum+=(ent>0?d.cp:d.n)*d.qty;
+    }
+  });
+  return pSum+dSum+(ord.delivery||0);
+}
+
+function saveOrderToHistory(){
+  const isC=S.type==='consegna';
+  const nome=isC?document.getElementById('c-nome').value:document.getElementById('a-nome').value;
+  const tel=isC?document.getElementById('c-tel').value:document.getElementById('a-tel').value;
+  const ora=isC?document.getElementById('c-ora').value:document.getElementById('a-ora').value;
+  const via=isC?document.getElementById('c-via').value:'';
+  const paese=isC?document.getElementById('c-paese').value:'';
+  const del=parseFloat(document.getElementById('del-cost')?.value||0)||0;
+  const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
+
+  const pizzasSnap=S.pizzas.map(p=>({
+    name:p.item.name,
+    itemType:p.item.type,
+    imp:p.imp,
+    extras:p.extras.map(e=>e.name),
+    custom:p.custom.filter(c=>c.trim()),
+    notes:p.notes,
+    total:pTotal(p)
+  }));
+
+  const drinksSnap=[];
+  Object.entries(S.drinks).forEach(([code,qty])=>{
+    if(!qty)return;
+    const d=DRINKS.find(x=>x.code===code);
+    if(!d)return;
+    drinksSnap.push({name:d.name,qty,isOmaggio:d.cp==='Omaggio',cp:typeof d.cp==='number'?d.cp:0,n:d.n});
+  });
+
+  const ord={
+    id:'ord_'+Date.now(),
+    ts:Date.now(),
+    type:S.type,
+    nome:nome||'—',
+    tel:tel||'',
+    ora:ora||'',
+    via:via||'',
+    paese:paese||'',
+    pay:S.pay||'',
+    notes:document.getElementById('order-notes').value||'',
+    pizzas:pizzasSnap,
+    drinks:drinksSnap,
+    delivery:del,
+  };
+  ord.total=calcOrderTotal(ord);
+  HISTORY.unshift(ord);
+  if(HISTORY.length>200)HISTORY.pop();
+  saveHistory();
+}
+
+// STEP 1
+function setType(t){
+  S.type=t;
+  document.getElementById('card-a').classList.toggle('selected',t==='asporto');
+  document.getElementById('card-c').classList.toggle('selected',t==='consegna');
+  document.getElementById('fa').style.display=t==='asporto'?'block':'none';
+  document.getElementById('fc').style.display=t==='consegna'?'block':'none';
+  document.getElementById('fnote').style.display='block';
+}
+function setPay(m){
+  S.pay=m;
+  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.toggle('selected',b.textContent.includes(m)));
+}
+function go1(){showStep(1);}
+function go2(){
+  if(!S.type){alert('Seleziona il tipo di ordine');return;}
+  showStep(2);renderDrinks();renderPizzas();
+}
+
+// STEP 2
+function doSearch(q){
+  const box=document.getElementById('sres');
+  if(!q){box.style.display='none';return;}
+  const r=MENU.filter(m=>m.name.toLowerCase().includes(q.toLowerCase())).slice(0,8);
+  if(!r.length){box.style.display='none';return;}
+  box.innerHTML=r.map(m=>{
+    const pr=m.m!=null?f(m.m):m.i!=null?f(m.i):'-';
+    return`<div class="s-item" onclick="addPizza('${m.code}')"><div><div class="sn">${m.name}</div><div class="st">${m.type}</div></div><div class="sp">${pr}</div></div>`;
+  }).join('');
+  box.style.display='block';
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))document.getElementById('sres').style.display='none';});
+
+function addPizza(code){
+  const item=MENU.find(m=>m.code===code);
+  if(!item)return;
+  const imp=item.m!=null?'mattone':item.i!=null?'integrale':null;
+  S.pizzas.push({item,imp,extras:[],custom:['','',''],notes:'',id:S.uid++,collapsed:false});
+  document.getElementById('sres').style.display='none';
+  document.getElementById('srch').value='';
+  renderPizzas();
+}
+
+function renderPizzas(){
+  const el=document.getElementById('plist');
+  if(!S.pizzas.length){
+    el.innerHTML=`<div class="empty"><div class="ei">🍕</div><p>Nessun prodotto aggiunto</p><p style="font-size:.8rem;margin-top:4px">Cerca nel campo sopra</p></div>`;
+    updateOmaggioBadge();return;
+  }
+  el.innerHTML=S.pizzas.map(p=>{
+    const item=p.item;
+    const opts=[{k:'tegamino',l:'Tegamino',v:item.t},{k:'mattone',l:'Mattone',v:item.m},{k:'integrale',l:'Integrale',v:item.i}].filter(o=>o.v!=null);
+    const impHtml=opts.map(o=>`<button class="tag ${p.imp===o.k?'on':''}" onclick="setImp(${p.id},'${o.k}')">${o.l} ${f(o.v)}</button>`).join('');
+    const exHtml=EXTRAS.map(e=>{const on=p.extras.find(x=>x.name===e.name);return`<button class="tag ${on?'on':''}" onclick="togEx(${p.id},'${e.name}',${e.p})">${e.name} +${f(e.p)}</button>`;}).join('');
+    const cxHtml=p.custom.map((v,i)=>`<div class="ce-row"><input type="text" placeholder="Ingrediente ${i+1} (+€ 1,00)" value="${v}" oninput="setCx(${p.id},${i},this.value)"></div>`).join('');
+    const collExtras=[...p.extras.map(e=>e.name),...p.custom.filter(c=>c.trim())];
+    const collSub=[p.imp?p.imp.charAt(0).toUpperCase()+p.imp.slice(1):'',...collExtras].filter(Boolean).join(', ');
+    return`<div class="pizza-card ${p.collapsed?'pc-collapsed':''}" id="pc${p.id}">
+      <div class="pc-head">
+        <div style="flex:1;min-width:0"><div class="pc-name">${item.name}</div><div class="pc-type" id="pcsub${p.id}">${p.collapsed&&collSub?collSub:item.type}</div></div>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          <div class="pc-total" id="pt${p.id}">${f(pTotal(p))}</div>
+          <button class="pc-collapse-btn" onclick="toggleCollapse(${p.id})">${p.collapsed?'▼ Espandi':'▲ Chiudi'}</button>
+          <button class="btn btn-danger btn-sm" onclick="rmPizza(${p.id})">✕</button>
+        </div>
+      </div>
+      <div class="pc-body">
+        <div><div class="section-label">Impasto</div><div class="tag-group">${impHtml}</div></div>
+        <div><div class="section-label">Extra</div><div class="tag-group">${exHtml}</div></div>
+        <div><div class="section-label">Aggiunte (+€ 1,00 cad.)</div><div class="custom-extras">${cxHtml}</div></div>
+        <div><div class="section-label">Note</div><textarea class="notes" placeholder="Note..." oninput="setNote(${p.id},this.value)">${p.notes}</textarea></div>
+      </div>
+    </div>`;
+  }).join('');
+  updateOmaggioBadge();
+}
+
+function toggleCollapse(id){const p=S.pizzas.find(x=>x.id===id);if(!p)return;p.collapsed=!p.collapsed;renderPizzas();}
+function updateOmaggioBadge(){
+  const wrap=document.getElementById('omaggio-wrap');if(!wrap)return;
+  const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
+  if(!ent){wrap.innerHTML='';return;}
+  let selOm=0,selPag=0;
+  Object.entries(S.drinks).forEach(([code,qty])=>{if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;if(d.cp==='Omaggio')selOm+=qty;else if(typeof d.cp==='number')selPag+=qty;});
+  const rem=ent-selOm;
+  let badge=`<span class="omaggio-badge" style="background:#111">Omaggio spettanti <span class="ob-num">${ent}</span></span>`;
+  if(selOm>0){const bgCol=rem<0?'#880000':rem===0?'#1a5c1a':'#555';badge+=`&nbsp;<span class="omaggio-badge" style="background:${bgCol}">Selezionate <span class="ob-num">${selOm}</span></span>`;}
+  if(selPag>0)badge+=`&nbsp;<span class="omaggio-badge" style="background:#444">💳 A pagamento <span class="ob-num">${selPag}</span></span>`;
+  if(rem>0)badge+=`&nbsp;<span style="font-size:.75rem;color:#b85c00;font-weight:700">⚠️ ancora ${rem} da assegnare</span>`;
+  else if(rem<0)badge+=`&nbsp;<span style="font-size:.75rem;color:#990000;font-weight:700">❌ ${Math.abs(rem)} in eccesso</span>`;
+  wrap.innerHTML=badge;
+}
+function setImp(id,imp){const p=S.pizzas.find(x=>x.id===id);if(p){p.imp=imp;renderPizzas();}}
+function togEx(id,name,price){const p=S.pizzas.find(x=>x.id===id);if(!p)return;const i=p.extras.findIndex(e=>e.name===name);if(i>=0)p.extras.splice(i,1);else p.extras.push({name,p:price});renderPizzas();}
+function setCx(id,i,val){const p=S.pizzas.find(x=>x.id===id);if(p){p.custom[i]=val;const el=document.getElementById('pt'+id);if(el)el.textContent=f(pTotal(p));}}
+function setNote(id,val){const p=S.pizzas.find(x=>x.id===id);if(p)p.notes=val;}
+function rmPizza(id){S.pizzas=S.pizzas.filter(p=>p.id!==id);renderPizzas();}
+function renderDrinks(){
+  document.getElementById('dgrid').innerHTML=DRINKS.map(d=>{
+    const qty=S.drinks[d.code]||0;
+    const note=typeof d.cp==='number'?`Con pizza ${f(d.cp)} · Senza ${f(d.n)}`:`Con pizza Omaggio · Senza ${f(d.n)}`;
+    return`<div class="drink-row"><div><div class="dr-name">${d.name}</div><div class="dr-price">${note}</div></div><div class="qty-ctrl"><button class="qty-btn" onclick="chDrink('${d.code}',-1)">−</button><div class="qty-val" id="dq${d.code}">${qty}</div><button class="qty-btn" onclick="chDrink('${d.code}',1)">+</button></div></div>`;
+  }).join('');
+}
+function chDrink(code,delta){S.drinks[code]=Math.max(0,(S.drinks[code]||0)+delta);const el=document.getElementById('dq'+code);if(el)el.textContent=S.drinks[code];updateOmaggioBadge();}
+
+// STEP 3
+function go3(){renderSummary();showStep(3);setTimeout(()=>{saveOrderToHistory();const ind=document.getElementById('save-indicator');ind.style.display='block';setTimeout(()=>{ind.style.display='none';},3000);},200);}
+
+function renderSummary(){
+  const isC=S.type==='consegna';
+  let infos=[];
+  if(isC){infos=[{k:'Tipo',v:`<span class="badge badge-c">Consegna</span>`},{k:'Orario',v:document.getElementById('c-ora').value||'—'},{k:'Nome',v:document.getElementById('c-nome').value||'—'},{k:'Indirizzo',v:(document.getElementById('c-via').value||'—')+', '+(document.getElementById('c-paese').value||'—')},{k:'Telefono',v:document.getElementById('c-tel').value||'—'},{k:'Pagamento',v:S.pay||'—'}];}
+  else{infos=[{k:'Tipo',v:`<span class="badge badge-a">Asporto</span>`},{k:'Orario',v:document.getElementById('a-ora').value||'—'},{k:'Nome',v:document.getElementById('a-nome').value||'—'},{k:'Telefono',v:document.getElementById('a-tel').value||'—'}];}
+  document.getElementById('sinfo').innerHTML=infos.map(x=>`<div class="si"><div class="si-k">${x.k}</div><div class="si-v">${x.v}</div></div>`).join('');
+  const on=document.getElementById('order-notes').value.trim();
+  const nb=document.getElementById('snotes');
+  if(on){nb.style.display='block';nb.innerHTML=`<div class="si-k" style="margin-bottom:4px">📝 Note ordine</div><div style="font-size:.88rem">${on}</div>`;}else{nb.style.display='none';}
+  const CAT_ORDER=['Pizza Rossa','Novità Pizza Rossa','Pizza Bianca',"Ta' Pizza Bianca",'Pizza Baby','Calzone','Focaccia','Focaccia Farcita','Chiacchera Fritta','Farinata'];
+  const grouped={};CAT_ORDER.forEach(c=>grouped[c]=[]);
+  S.pizzas.forEach(p=>{const cat=p.item.type;if(!grouped[cat])grouped[cat]=[];grouped[cat].push(p);});
+  const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
+  let rows='';let firstSec=true;
+  CAT_ORDER.forEach(cat=>{
+    const items=grouped[cat];if(!items||!items.length)return;
+    if(!firstSec)rows+=`<div style="height:1px;background:var(--border)"></div>`;
+    rows+=`<div style="background:var(--surface);padding:6px 14px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim)">${cat}</div>`;
+    items.forEach(p=>{
+      const all=[...p.extras.map(e=>e.name),...p.custom.filter(c=>c.trim())];
+      rows+=`<div class="st-row"><div><div class="st-name">${p.item.name} <span style="color:var(--text-dim);font-weight:400;font-size:.8rem">(${p.imp})</span></div>${all.length?`<div class="st-detail">+ ${all.join(', ')}</div>`:''} ${p.notes?`<div class="st-detail">📝 ${p.notes}</div>`:''}</div><div class="st-price">${f(pTotal(p))}</div></div>`;
+    });
+    firstSec=false;
+  });
+  const de=Object.entries(S.drinks).filter(([,q])=>q>0);
+  if(de.length){
+    if(!firstSec)rows+=`<div style="height:1px;background:var(--border)"></div>`;
+    let omS=0;de.forEach(([code,qty])=>{const d=DRINKS.find(x=>x.code===code);if(d&&d.cp==='Omaggio')omS+=qty;});
+    const oLbl=ent>0?`🥤 Bibite <span style="font-size:.72rem;font-weight:700;margin-left:6px;padding:2px 7px;border-radius:10px;background:${omS===ent?'#1a7a1a':omS>ent?'#990000':'#b85c00'};color:#fff">${omS}/${ent} omaggio</span>`:'🥤 Bibite';
+    rows+=`<div style="background:var(--surface);padding:6px 14px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim)">${oLbl}</div>`;
+    let omU=0;
+    de.forEach(([code,qty])=>{
+      const d=DRINKS.find(x=>x.code===code);if(!d)return;
+      let price;
+      if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));const paid=qty-free;omU+=free;if(free>0&&paid===0)price=`<span style="color:#1a7a1a;font-style:italic">Omaggio${free>1?' ×'+free:''}</span>`;else if(free>0&&paid>0)price=`<span style="color:#1a7a1a;font-style:italic">×${free} Omaggio</span> + ${f(paid*d.n)}`;else price=f(qty*d.n);}
+      else price=f(d.cp*qty);
+      rows+=`<div class="st-row"><div class="st-name">${d.name} <span style="color:var(--text-dim)">×${qty}</span></div><div class="st-price">${price}</div></div>`;
+    });
+  }
+  document.getElementById('sprod').innerHTML=rows||'<div style="padding:12px 14px;color:var(--text-dim);font-size:.88rem">Nessun prodotto</div>';
+  document.getElementById('del-row').style.display=isC?'flex':'none';
+  const savedIp=localStorage.getItem('printer_ip')||'';
+  document.getElementById('printer-ip').value=savedIp;
+  calcTotal();
+}
+
+function calcTotal(){
+  const pSum=S.pizzas.reduce((s,p)=>s+pTotal(p),0);
+  const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
+  let dSum=0,omU=0;
+  Object.entries(S.drinks).forEach(([code,qty])=>{
+    if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;
+    if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));omU+=free;dSum+=(qty-free)*d.n;}
+    else dSum+=(ent>0?d.cp:d.n)*qty;
+  });
+  const del=parseFloat(document.getElementById('del-cost')?.value||0)||0;
+  document.getElementById('tot').textContent=f(pSum+dSum+del);
+}
+function saveIp(){const ip=document.getElementById('printer-ip').value.trim();if(ip)localStorage.setItem('printer_ip',ip);document.getElementById('pstatus').innerHTML='';}
+
+// STORICO
+function toggleHistory(){
+  const scr=document.getElementById('screen4');
+  if(scr.classList.contains('active')){backFromHistory();}
+  else{
+    prevScreen=document.querySelector('.screen.active')?.id?.replace('screen','')||1;
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    scr.classList.add('active');
+    document.getElementById('stepInd').style.display='none';
+    renderHistory();
+  }
+}
+
+function backFromHistory(){
+  document.getElementById('screen4').classList.remove('active');
+  document.getElementById('stepInd').style.display='flex';
+  showStep(parseInt(prevScreen)||1);
+}
+
+function renderHistory(){
+  const q=(document.getElementById('hist-search')?.value||'').toLowerCase();
+  const filter=document.getElementById('hist-filter')?.value||'';
+  const sort=document.getElementById('hist-sort')?.value||'newest';
+
+  let list=[...HISTORY];
+  if(filter)list=list.filter(o=>o.type===filter);
+  if(q)list=list.filter(o=>(o.nome+o.via+o.paese+o.tel).toLowerCase().includes(q));
+
+  if(sort==='oldest')list.sort((a,b)=>a.ts-b.ts);
+  else if(sort==='highest')list.sort((a,b)=>b.total-a.total);
+  else if(sort==='lowest')list.sort((a,b)=>a.total-b.total);
+  else list.sort((a,b)=>b.ts-a.ts);
+
+  // Stats
+  const totalRev=HISTORY.reduce((s,o)=>s+o.total,0);
+  const avgTot=HISTORY.length?totalRev/HISTORY.length:0;
+  document.getElementById('histStats').innerHTML=`
+    <div class="hs-card"><div class="hs-num">${HISTORY.length}</div><div class="hs-lbl">Ordini totali</div></div>
+    <div class="hs-card"><div class="hs-num">${f(totalRev)}</div><div class="hs-lbl">Incasso totale</div></div>
+    <div class="hs-card"><div class="hs-num">${f(avgTot)}</div><div class="hs-lbl">Media ordine</div></div>`;
+
+  if(!list.length){
+    document.getElementById('hist-list').innerHTML=`<div class="no-orders"><div class="ni">📋</div><p>Nessun ordine trovato</p></div>`;
+    return;
+  }
+
+  document.getElementById('hist-list').innerHTML=list.map(ord=>{
+    const exp=expandedOrders[ord.id];
+    const dt=new Date(ord.ts);
+    const dateStr=dt.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+    const timeStr=dt.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    let meta=`${dateStr} ${timeStr}`;
+    if(ord.ora)meta+=` · Orario consegna: ${ord.ora}`;
+    if(ord.tel)meta+=` · ${ord.tel}`;
+
+    let bodyHtml='';
+    if(exp){
+      if(ord.pizzas.length){
+        bodyHtml+=`<div class="oc-section-lbl">Prodotti</div>`;
+        ord.pizzas.forEach(p=>{
+          const extras=[...p.extras,...p.custom].filter(Boolean);
+          bodyHtml+=`<div class="oc-item-row"><span class="oc-item-name">${p.name} <span style="color:var(--text-dim);font-size:.78rem">(${p.imp})</span>${extras.length?' <span style="color:var(--text-dim);font-size:.75rem">+ '+extras.join(', ')+'</span>':''}</span><span class="oc-item-price">${f(p.total)}</span></div>`;
+          if(p.notes)bodyHtml+=`<div style="font-size:.75rem;color:var(--text-dim);padding-left:8px;margin-bottom:2px">📝 ${p.notes}</div>`;
+        });
+      }
+      if(ord.drinks&&ord.drinks.length){
+        bodyHtml+=`<div class="oc-section-lbl">Bibite</div>`;
+        ord.drinks.forEach(d=>bodyHtml+=`<div class="oc-item-row"><span class="oc-item-name">${d.name} ×${d.qty}</span><span class="oc-item-price">${d.isOmaggio?'Omaggio':f(d.cp*d.qty)}</span></div>`);
+      }
+      if(ord.delivery>0)bodyHtml+=`<div class="oc-item-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)"><span class="oc-item-name">Consegna</span><span class="oc-item-price">${f(ord.delivery)}</span></div>`;
+      if(ord.pay)bodyHtml+=`<div class="oc-item-row"><span class="oc-item-name" style="color:var(--text-dim)">Pagamento</span><span class="oc-item-price" style="font-weight:400">${ord.pay}</span></div>`;
+      if(ord.notes)bodyHtml+=`<div style="font-size:.8rem;color:var(--text-dim);margin-top:8px;padding:8px;background:var(--surface);border-radius:4px">📝 ${ord.notes}</div>`;
+      bodyHtml+=`<div class="oc-actions">
+        <button class="btn-del-order" onclick="deleteOrder('${ord.id}',event)">Elimina</button>
+      </div>`;
+    }
+
+    const addrLine=ord.type==='consegna'&&ord.via?`<span style="font-size:.75rem;color:var(--text-dim)"> · ${ord.via}${ord.paese?', '+ord.paese:''}</span>`:'';
+
+    return`<div class="order-card" id="oc_${ord.id}" onclick="toggleOrder('${ord.id}')">
+      <div class="oc-head ${exp?'':'collapsed'}">
+        <div class="oc-left">
+          <div class="oc-name">${ord.nome}${addrLine}</div>
+          <div class="oc-meta">${meta}</div>
+        </div>
+        <div class="oc-right">
+          <span class="oc-badge ${ord.type}">${ord.type==='consegna'?'🛵 Consegna':'🍕 Asporto'}</span>
+          <span class="oc-total">${f(ord.total)}</span>
+          <span style="color:var(--text-dim);font-size:.8rem">${exp?'▲':'▼'}</span>
+        </div>
+      </div>
+      ${exp?`<div class="oc-body">${bodyHtml}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function toggleOrder(id){
+  expandedOrders[id]=!expandedOrders[id];
+  renderHistory();
+}
+
+function deleteOrder(id,e){
+  e.stopPropagation();
+  if(!confirm('Eliminare questo ordine?'))return;
+  HISTORY=HISTORY.filter(o=>o.id!==id);
+  delete expandedOrders[id];
+  saveHistory();
+  renderHistory();
+}
+
+function clearAllHistory(){
+  if(!confirm('Svuotare tutto lo storico? L\'operazione non è reversibile.'))return;
+  HISTORY=[];expandedOrders={};
+  saveHistory();renderHistory();
+}
+
+// NAV
+function showStep(n){
+  document.querySelectorAll('.screen').forEach((s,i)=>s.classList.toggle('active',i+1===n));
+  document.getElementById('stepInd').style.display='flex';
+  for(let i=1;i<=3;i++){const d=document.getElementById('dot'+i);d.classList.remove('active','done');if(i<n)d.classList.add('done');else if(i===n)d.classList.add('active');}
+  for(let i=1;i<=2;i++){const l=document.getElementById('l'+i+(i+1));if(l)l.classList.toggle('done',i<n);}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function newOrder(){
+  if(!confirm('Iniziare un nuovo ordine?'))return;
+  S={type:null,pay:null,pizzas:[],drinks:{},uid:1};
+  document.querySelectorAll('input[type=text],input[type=tel],input[type=time],input[type=number],textarea').forEach(el=>{if(el.id!=='printer-ip')el.value='';});
+  document.querySelectorAll('.pay-btn,.type-card').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('fa').style.display='none';
+  document.getElementById('fc').style.display='none';
+  document.getElementById('fnote').style.display='none';
+  showStep(1);
+}
+
+// PRINT / EXPORT (invariati rispetto all'originale)
+async function doPrint(){
+  const ip=document.getElementById('printer-ip').value.trim();
+  if(!ip){alert("Inserisci l'IP della stampante");return;}
+  const status=document.getElementById('pstatus');
+  status.innerHTML='<span style="color:#888">Connessione...</span>';
+  try{
+    const receipt=buildReceipt();
+    const xml=buildEposXml(receipt);
+    const url=`http://${ip}/cgi-bin/epos/service.cgi?devid=local_printer&timeout=10000`;
+    const resp=await fetch(url,{method:'POST',headers:{'Content-Type':'text/xml; charset=utf-8','SOAPAction':'""'},body:xml});
+    if(resp.ok){status.innerHTML='<span class="status-ok">✓ Stampato</span>';setTimeout(()=>{status.innerHTML='';},3000);}
+    else throw new Error('HTTP '+resp.status);
+  }catch(e){status.innerHTML='<span class="status-err">✗ Errore</span>';const fb=confirm('Stampa diretta non riuscita.\nUsare la stampa del browser?');if(fb)window.print();}
+}
+
+function buildReceipt(){
+  const isC=S.type==='consegna';
+  const now=new Date();
+  const timeStr=now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  const dateStr=now.toLocaleDateString('it-IT');
+  let nome,tel,ora,extra='';
+  if(isC){nome=document.getElementById('c-nome').value||'—';tel=document.getElementById('c-tel').value||'—';ora=document.getElementById('c-ora').value||'—';const via=document.getElementById('c-via').value||'';const paese=document.getElementById('c-paese').value||'';extra=`${via}, ${paese}`;}
+  else{nome=document.getElementById('a-nome').value||'—';tel=document.getElementById('a-tel').value||'—';ora=document.getElementById('a-ora').value||'—';}
+  const lines=[];
+  lines.push({t:'header',text:'To.To Alpignano'});
+  lines.push({t:'sub',text:dateStr+' '+timeStr});
+  lines.push({t:'separator'});
+  lines.push({t:'kv',k:isC?'CONSEGNA':'ASPORTO',v:ora});
+  lines.push({t:'kv',k:'NOME',v:nome});
+  lines.push({t:'kv',k:'TEL',v:tel});
+  if(isC&&extra)lines.push({t:'kv',k:'INDIRIZZO',v:extra});
+  if(isC&&S.pay)lines.push({t:'kv',k:'PAGAMENTO',v:S.pay});
+  lines.push({t:'separator'});
+  const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
+  const CAT_ORDER=['Pizza Rossa','Novità Pizza Rossa','Pizza Bianca',"Ta' Pizza Bianca",'Pizza Baby','Calzone','Focaccia','Focaccia Farcita','Chiacchera Fritta','Farinata'];
+  const grouped={};CAT_ORDER.forEach(c=>grouped[c]=[]);
+  S.pizzas.forEach(p=>{if(!grouped[p.item.type])grouped[p.item.type]=[];grouped[p.item.type].push(p);});
+  CAT_ORDER.forEach(cat=>{
+    const items=grouped[cat];if(!items||!items.length)return;
+    lines.push({t:'section',text:cat.toUpperCase()});
+    items.forEach(p=>{
+      lines.push({t:'item',name:p.item.name,sub:`(${p.imp})`,price:f(pTotal(p))});
+      const all=[...p.extras.map(e=>e.name),...p.custom.filter(c=>c.trim())];
+      if(all.length)lines.push({t:'note',text:'+ '+all.join(', ')});
+      if(p.notes)lines.push({t:'note',text:'📝 '+p.notes});
+    });
+  });
+  const de=Object.entries(S.drinks).filter(([,q])=>q>0);
+  if(de.length){
+    lines.push({t:'section',text:'BIBITE'});
+    let omU=0;
+    de.forEach(([code,qty])=>{
+      const d=DRINKS.find(x=>x.code===code);if(!d)return;
+      let ps;
+      if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));const paid=qty-free;omU+=free;if(free>0&&paid===0)ps='Omaggio';else if(free>0&&paid>0)ps=`x${free} Om. + ${f(paid*d.n)}`;else ps=f(qty*d.n);}
+      else ps=f((ent>0?d.cp:d.n)*qty);
+      lines.push({t:'item',name:d.name+' x'+qty,sub:'',price:ps});
+    });
+  }
+  lines.push({t:'separator'});
+  const del=parseFloat(document.getElementById('del-cost')?.value||0)||0;
+  if(del>0)lines.push({t:'kv',k:'Consegna',v:f(del)});
+  const pSum=S.pizzas.reduce((s,p)=>s+pTotal(p),0);
+  let dSum=0,omU2=0;
+  Object.entries(S.drinks).forEach(([code,qty])=>{if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU2));omU2+=free;dSum+=(qty-free)*d.n;}else dSum+=(ent>0?d.cp:d.n)*qty;});
+  lines.push({t:'total',text:'TOTALE',value:f(pSum+dSum+del)});
+  lines.push({t:'separator'});
+  lines.push({t:'sub',text:'Grazie!'});
+  return lines;
+}
+
+function buildEposXml(lines){
+  const W=48;
+  function pad(s,w){return String(s).padEnd(w,' ').substring(0,w);}
+  function padL(s,w){return String(s).padStart(w,' ').substring(0,w);}
+  function kv(k,v){const vw=W-k.length-1;return k+' '+padL(v,vw);}
+  let cmds='';
+  lines.forEach(l=>{
+    if(l.t==='section')cmds+=`<text align="left">-- ${escXml(l.text)} --\n</text>`;
+    else if(l.t==='header')cmds+=`<text align="center" bold="true" width="2" height="2">${escXml(l.text)}\n</text>`;
+    else if(l.t==='sub')cmds+=`<text align="center">${escXml(l.text)}\n</text>`;
+    else if(l.t==='separator')cmds+=`<text align="left">${escXml('-'.repeat(W))}\n</text>`;
+    else if(l.t==='kv')cmds+=`<text align="left">${escXml(kv(l.k+':',l.v))}\n</text>`;
+    else if(l.t==='item'){const nameStr=l.name+(l.sub?' '+l.sub:'');const maxName=W-l.price.length-1;const n=nameStr.length>maxName?nameStr.substring(0,maxName-1)+'.':pad(nameStr,maxName);cmds+=`<text align="left" bold="true">${escXml(n+' '+l.price)}\n</text>`;}
+    else if(l.t==='note')cmds+=`<text align="left">  ${escXml(l.text)}\n</text>`;
+    else if(l.t==='total'){cmds+=`<text align="left" bold="true" width="2" height="2">${escXml(l.text)}\n</text>`;cmds+=`<text align="right" bold="true" width="2" height="2">${escXml(l.value)}\n</text>`;}
+  });
+  cmds+=`<feed line="3"/><cut type="feed"/>`;
+  return`<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">${cmds}</epos-print></s:Body></s:Envelope>`;
+}
+function escXml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function openReceiptTab(){
+  const receipt=buildReceipt();
+  function row(left,right,bold=false){const fw=bold?'700':'400';const rAlign=right!==undefined?`<span style="float:right;font-weight:${bold?'700':'600'}">${right}</span>`:'';return`<div style="overflow:hidden;font-weight:${fw}">${rAlign}${left}</div>`;}
+  function sep(){return`<div style="border-top:1px dashed #999;margin:6px 0"></div>`;}
+  function center(t,size='1em',bold=false){return`<div style="text-align:center;font-size:${size};font-weight:${bold?'700':'400'}">${t}</div>`;}
+  let html='';
+  receipt.forEach(l=>{
+    if(l.t==='section')html+=`<div style="background:#eee;padding:3px 6px;font-size:.75em;font-weight:700;letter-spacing:.06em;margin:6px 0 2px">— ${l.text} —</div>`;
+    else if(l.t==='header')html+=center(l.text,'1.4em',true);
+    else if(l.t==='sub')html+=center(l.text,'.85em');
+    else if(l.t==='separator')html+=sep();
+    else if(l.t==='kv')html+=row(`<b>${l.k}:</b> ${l.v}`);
+    else if(l.t==='item')html+=row(`${l.name}${l.sub?` <span style="color:#666;font-size:.82em">${l.sub}</span>`:''}`  ,l.price,true);
+    else if(l.t==='note')html+=`<div style="padding-left:8px;color:#555;font-size:.82em">${l.text}</div>`;
+    else if(l.t==='total')html+=`<div style="display:flex;justify-content:space-between;font-size:1.2em;font-weight:800;margin:4px 0">${l.text}<span>${l.value}</span></div>`;
+  });
+  const page=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Scontrino</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Courier New',Courier,monospace;font-size:13px;line-height:1.55;background:#f5f5f5;display:flex;justify-content:center;padding:20px 0}.ticket{width:80mm;background:#fff;padding:14px 10px;box-shadow:0 2px 12px rgba(0,0,0,.12);min-height:100vh}@media print{body{background:white;padding:0}.ticket{box-shadow:none}.no-print{display:none}}</style></head><body><div class="ticket">${html}<div style="text-align:center;margin-top:16px;font-size:.78em;color:#888">- - - - - - - - - - - - - - - - - - -</div></div><div class="no-print" style="position:fixed;bottom:20px;right:20px"><button onclick="window.print()" style="background:#111;color:#fff;border:none;padding:10px 18px;border-radius:6px;font-size:.9rem;cursor:pointer">🖨️ Stampa</button></div></body></html>`;
+  const w=window.open('','_blank');if(w){w.document.write(page);w.document.close();}else alert('Popup bloccato.');
+}
+
+function exportCsv(){
+  const isC=S.type==='consegna';
+  const ora=isC?(document.getElementById('c-ora')?.value||''):(document.getElementById('a-ora')?.value||'');
+  const nome=isC?(document.getElementById('c-nome')?.value||''):(document.getElementById('a-nome')?.value||'');
+  const tel=isC?(document.getElementById('c-tel')?.value||''):(document.getElementById('a-tel')?.value||'');
+  const via=isC?(document.getElementById('c-via')?.value||''):'';
+  const paese=isC?(document.getElementById('c-paese')?.value||''):'';
+  const paga=isC?(S.pay||''):'';
+  const noteOrdine=(document.getElementById('order-notes')?.value||'');
+  const tipoOrdine=isC?'Consegna':'Asporto';
+  const del=isC?(parseFloat(document.getElementById('del-cost')?.value||0)||0):0;
+  const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
+  const pSum=S.pizzas.reduce((s,p)=>s+pTotal(p),0);
+  let dSum=0,omU=0;
+  Object.entries(S.drinks).forEach(([code,qty])=>{if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));omU+=free;dSum+=(qty-free)*d.n;}else dSum+=(ent>0?d.cp:d.n)*qty;});
+  const totale=pSum+dSum+del;
+  const rows=[];const sep2=';';
+  rows.push(['ORDINE'].join(sep2));rows.push(['Tipo',tipoOrdine].join(sep2));rows.push(['Orario',ora].join(sep2));rows.push(['Nome',nome].join(sep2));rows.push(['Telefono',tel].join(sep2));
+  if(isC){rows.push(['Indirizzo',via].join(sep2));rows.push(['Città',paese].join(sep2));rows.push(['Pagamento',paga].join(sep2));rows.push(['Costo consegna',del.toFixed(2).replace('.',',')].join(sep2));}
+  if(noteOrdine)rows.push(['Note ordine',noteOrdine].join(sep2));
+  rows.push([''].join(sep2));rows.push(['PRODOTTI'].join(sep2));rows.push(['N.','Nome','Tipo','Impasto','Extra','Aggiunte','Note','Prezzo'].join(sep2));
+  S.pizzas.forEach((p,idx)=>{const extras=p.extras.map(e=>e.name).join(', ');const custom=p.custom.filter(c=>c.trim()).join(', ');const imp=p.imp?p.imp.charAt(0).toUpperCase()+p.imp.slice(1):'';const price=pTotal(p).toFixed(2).replace('.',',');rows.push([idx+1,p.item.name,p.item.type,imp,extras,custom,p.notes,price].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(sep2));});
+  rows.push([''].join(sep2));
+  const de2=Object.entries(S.drinks).filter(([,q])=>q>0);
+  if(de2.length){rows.push(['BIBITE'].join(sep2));rows.push(['Nome','Quantità','Prezzo'].join(sep2));let omU2=0;de2.forEach(([code,qty])=>{const d=DRINKS.find(x=>x.code===code);if(!d)return;let ps;if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU2));const paid=qty-free;omU2+=free;if(free>0&&paid===0)ps='Omaggio';else if(free>0&&paid>0)ps=`x${free} Om. + € ${(paid*d.n).toFixed(2).replace('.',',')}`;else ps='€ '+((ent>0?d.cp:d.n)*qty).toFixed(2).replace('.',',');}else ps='€ '+((ent>0?d.cp:d.n)*qty).toFixed(2).replace('.',',');rows.push(['"'+d.name+'"',qty,'"'+ps+'"'].join(sep2));});rows.push([''].join(sep2));}
+  rows.push(['TOTALE','','','','','','','€ '+totale.toFixed(2).replace('.',',')].join(sep2));
+  const bom='\uFEFF';const csvContent=bom+rows.join('\r\n');
+  const blob=new Blob([csvContent],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');const ts2=new Date();const dateStr2=`${ts2.getFullYear()}${String(ts2.getMonth()+1).padStart(2,'0')}${String(ts2.getDate()).padStart(2,'0')}_${String(ts2.getHours()).padStart(2,'0')}${String(ts2.getMinutes()).padStart(2,'0')}`;
+  a.href=url;a.download=`ordine_${nome.replace(/\s+/g,'_')||tipoOrdine.toLowerCase()}_${dateStr2}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+// INIT
+loadHistory();
+showStep(1);
+</script>
