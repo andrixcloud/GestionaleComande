@@ -507,8 +507,8 @@ function calcOrderTotal(ord){
   const ent=ord.pizzas.filter(p=>p.itemType!=='Farinata').length;
   let dSum=0,omUsed=0;
   (ord.drinks||[]).forEach(d=>{
-    if(d.isOmaggio){const free=Math.min(d.qty,Math.max(0,ent-omUsed));omUsed+=free;dSum+=(d.qty-free)*d.n;}
-    else{dSum+=(ent>0?d.cp:d.n)*d.qty;}
+    const free=Math.min(d.qty,Math.max(0,ent-omUsed));omUsed+=free;const paid=d.qty-free;
+    if(d.isOmaggio){dSum+=paid*d.n;}else{dSum+=free*d.cp+paid*d.n;}
   });
   return pSum+dSum+(ord.delivery||0);
 }
@@ -663,9 +663,17 @@ function renderSummary(){
     let omU=0;
     de.forEach(([code,qty])=>{
       const d=DRINKS.find(x=>x.code===code);if(!d)return;
+      const free=Math.min(qty,Math.max(0,ent-omU));const paid=qty-free;omU+=free;
       let price;
-      if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));const paid=qty-free;omU+=free;if(free>0&&paid===0)price=`<span style="color:#1a7a1a;font-style:italic">Omaggio${free>1?' ×'+free:''}</span>`;else if(free>0&&paid>0)price=`<span style="color:#1a7a1a;font-style:italic">×${free} Omaggio</span> + ${f(paid*d.n)}`;else price=f(qty*d.n);}
-      else price=f(d.cp*qty);
+      if(d.cp==='Omaggio'){
+        if(free>0&&paid===0)price=`<span style="color:#1a7a1a;font-style:italic">Omaggio${free>1?' ×'+free:''}</span>`;
+        else if(free>0&&paid>0)price=`<span style="color:#1a7a1a;font-style:italic">×${free} Omaggio</span> + ${f(paid*d.n)}`;
+        else price=f(qty*d.n);
+      }else{
+        if(free>0&&paid===0)price=`<span style="color:#1a7a1a;font-style:italic">${free>1?'×'+free+' ':''}</span>${f(free*d.cp)}`;
+        else if(free>0&&paid>0)price=`${f(free*d.cp)} + ${f(paid*d.n)}`;
+        else price=f(qty*d.n);
+      }
       rows+=`<div class="st-row"><div class="st-name">${d.name} <span style="color:var(--text-dim)">×${qty}</span></div><div class="st-price">${price}</div></div>`;
     });
   }
@@ -680,7 +688,7 @@ function calcTotal(){
   const pSum=S.pizzas.reduce((s,p)=>s+pTotal(p),0);
   const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
   let dSum=0,omU=0;
-  Object.entries(S.drinks).forEach(([code,qty])=>{if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));omU+=free;dSum+=(qty-free)*d.n;}else dSum+=(ent>0?d.cp:d.n)*qty;});
+  Object.entries(S.drinks).forEach(([code,qty])=>{if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;const free=Math.min(qty,Math.max(0,ent-omU));omU+=free;const paid=qty-free;if(d.cp==='Omaggio'){dSum+=paid*d.n;}else{dSum+=free*d.cp+paid*d.n;}});
   const del=parseFloat(document.getElementById('del-cost')?.value||0)||0;
   document.getElementById('tot').textContent=f(pSum+dSum+del);
 }
@@ -804,6 +812,8 @@ function buildReceipt(){
   lines.push({t:'kv',k:isC?'CONSEGNA':'ASPORTO',v:ora});lines.push({t:'kv',k:'NOME',v:nome});lines.push({t:'kv',k:'TEL',v:tel});
   if(isC&&extra)lines.push({t:'kv',k:'INDIRIZZO',v:extra});
   if(isC&&S.pay)lines.push({t:'kv',k:'PAGAMENTO',v:S.pay});
+  const noteOrdine=document.getElementById('order-notes')?.value||'';
+  if(noteOrdine){lines.push({t:'separator'});lines.push({t:'kv',k:'NOTE',v:noteOrdine});}
   lines.push({t:'separator'});
   const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
   const CAT_ORDER=['Pizza Rossa','Novità Pizza Rossa','Pizza Bianca',"Novità Pizza Bianca",'Pizza Baby','Calzone','Focaccia','Focaccia Farcita','Chiacchera Fritta','Farinata'];
@@ -811,13 +821,13 @@ function buildReceipt(){
   S.pizzas.forEach(p=>{if(!grouped[p.item.type])grouped[p.item.type]=[];grouped[p.item.type].push(p);});
   CAT_ORDER.forEach(cat=>{const items=grouped[cat];if(!items||!items.length)return;lines.push({t:'section',text:cat.toUpperCase()});items.forEach(p=>{lines.push({t:'item',name:p.item.name,sub:`(${p.imp})`,price:f(pTotal(p))});const all=[...p.extras.map(e=>e.name),...p.custom.filter(c=>c.trim())];if(all.length)lines.push({t:'note',text:'+ '+all.join(', ')});if(p.notes)lines.push({t:'note',text:'📝 '+p.notes});});});
   const de=Object.entries(S.drinks).filter(([,q])=>q>0);
-  if(de.length){lines.push({t:'section',text:'BIBITE'});let omU=0;de.forEach(([code,qty])=>{const d=DRINKS.find(x=>x.code===code);if(!d)return;let ps;if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU));const paid=qty-free;omU+=free;if(free>0&&paid===0)ps='Omaggio';else if(free>0&&paid>0)ps=`x${free} Om. + ${f(paid*d.n)}`;else ps=f(qty*d.n);}else ps=f((ent>0?d.cp:d.n)*qty);lines.push({t:'item',name:d.name+' x'+qty,sub:'',price:ps});});}
+  if(de.length){lines.push({t:'section',text:'BIBITE'});let omU=0;de.forEach(([code,qty])=>{const d=DRINKS.find(x=>x.code===code);if(!d)return;const free=Math.min(qty,Math.max(0,ent-omU));const paid=qty-free;omU+=free;let ps;if(d.cp==='Omaggio'){if(free>0&&paid===0)ps='Omaggio';else if(free>0&&paid>0)ps=`x${free} Om. + ${f(paid*d.n)}`;else ps=f(qty*d.n);}else{if(free>0&&paid===0)ps=f(free*d.cp);else if(free>0&&paid>0)ps=`${f(free*d.cp)} + ${f(paid*d.n)}`;else ps=f(qty*d.n);}lines.push({t:'item',name:d.name+' x'+qty,sub:'',price:ps});});}
   lines.push({t:'separator'});
   const del=parseFloat(document.getElementById('del-cost')?.value||0)||0;
   if(del>0)lines.push({t:'kv',k:'Consegna',v:f(del)});
   const pSum=S.pizzas.reduce((s,p)=>s+pTotal(p),0);
   let dSum=0,omU2=0;
-  Object.entries(S.drinks).forEach(([code,qty])=>{if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;if(d.cp==='Omaggio'){const free=Math.min(qty,Math.max(0,ent-omU2));omU2+=free;dSum+=(qty-free)*d.n;}else dSum+=(ent>0?d.cp:d.n)*qty;});
+  Object.entries(S.drinks).forEach(([code,qty])=>{if(!qty)return;const d=DRINKS.find(x=>x.code===code);if(!d)return;const free=Math.min(qty,Math.max(0,ent-omU2));omU2+=free;const paid=qty-free;if(d.cp==='Omaggio'){dSum+=paid*d.n;}else{dSum+=free*d.cp+paid*d.n;}});
   lines.push({t:'total',text:'TOTALE',value:f(pSum+dSum+del)});
   lines.push({t:'separator'});lines.push({t:'sub',text:'Grazie!'});
   return lines;
@@ -858,6 +868,7 @@ function buildReceiptFromOrder(ord){
   lines.push({t:'kv',k:'TEL',v:ord.tel||'—'});
   if(isC&&ord.via)lines.push({t:'kv',k:'INDIRIZZO',v:ord.via+(ord.paese?', '+ord.paese:'')});
   if(isC&&ord.pay)lines.push({t:'kv',k:'PAGAMENTO',v:ord.pay});
+  if(ord.notes){lines.push({t:'separator'});lines.push({t:'kv',k:'NOTE',v:ord.notes});}
   lines.push({t:'separator'});
   const ent=ord.pizzas.filter(p=>p.itemType!=='Farinata').length;
   const CAT_ORDER=['Pizza Rossa','Novità Pizza Rossa','Pizza Bianca',"Novità Pizza Bianca",'Pizza Baby','Calzone','Focaccia','Focaccia Farcita','Chiacchera Fritta','Farinata'];
@@ -877,9 +888,10 @@ function buildReceiptFromOrder(ord){
     lines.push({t:'section',text:'BIBITE'});
     let omU=0;
     ord.drinks.forEach(d=>{
+      const free=Math.min(d.qty,Math.max(0,ent-omU));const paid=d.qty-free;omU+=free;
       let ps;
-      if(d.isOmaggio){const free=Math.min(d.qty,Math.max(0,ent-omU));const paid=d.qty-free;omU+=free;if(free>0&&paid===0)ps='Omaggio';else if(free>0&&paid>0)ps=`x${free} Om. + ${f(paid*d.n)}`;else ps=f(d.qty*d.n);}
-      else ps=f((ent>0?d.cp:d.n)*d.qty);
+      if(d.isOmaggio){if(free>0&&paid===0)ps='Omaggio';else if(free>0&&paid>0)ps=`x${free} Om. + ${f(paid*d.n)}`;else ps=f(d.qty*d.n);}
+      else{if(free>0&&paid===0)ps=f(free*d.cp);else if(free>0&&paid>0)ps=`${f(free*d.cp)} + ${f(paid*d.n)}`;else ps=f(d.qty*d.n);}
       lines.push({t:'item',name:d.name+' x'+d.qty,sub:'',price:ps});
     });
   }
@@ -990,4 +1002,3 @@ showStep(1);
 </script>
 </head>
 </html>
-
