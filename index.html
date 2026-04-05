@@ -399,21 +399,21 @@ const MENU=[
   {code:"1311",name:"Nazzarì",type:"Pizza Bianca",t:8.0,m:9.0,i:10.0},
   {code:"1312",name:"Gamberetti e Rucola*",type:"Pizza Bianca",t:8.5,m:9.5,i:10.5},
   {code:"1313",name:"Vesuvio (Pizza Doppia)",type:"Pizza Bianca",t:12.0,m:13.0,i:14.0},
-  {code:"1401",name:"Del Contadino",type:"Ta' Pizza Bianca",t:7.0,m:8.0,i:9.0},
-  {code:"1402",name:"Arlecchino",type:"Ta' Pizza Bianca",t:7.5,m:8.5,i:9.5},
-  {code:"1403",name:"Deliziosa",type:"Ta' Pizza Bianca",t:7.5,m:8.5,i:9.5},
-  {code:"1404",name:"Genovese",type:"Ta' Pizza Bianca",t:7.5,m:8.5,i:9.5},
-  {code:"1405",name:"Italiana",type:"Ta' Pizza Bianca",t:7.5,m:8.5,i:9.5},
-  {code:"1406",name:"Campagnola",type:"Ta' Pizza Bianca",t:8.5,m:9.5,i:10.5},
-  {code:"1407",name:"Naturale",type:"Ta' Pizza Bianca",t:8.5,m:9.5,i:10.5},
-  {code:"1408",name:"Spiritosa",type:"Ta' Pizza Bianca",t:8.5,m:9.5,i:10.5},
-  {code:"1409",name:"Bufalina",type:"Ta' Pizza Bianca",t:9.0,m:10.0,i:11.0},
-  {code:"1410",name:"Romantica",type:"Ta' Pizza Bianca",t:9.0,m:10.0,i:11.0},
-  {code:"1411",name:"Toscana",type:"Ta' Pizza Bianca",t:9.0,m:10.0,i:11.0},
-  {code:"1412",name:"Bufalo Bill",type:"Ta' Pizza Bianca",t:10.0,m:11.0,i:12.0},
+  {code:"1401",name:"Del Contadino",type:"Novità Pizza Bianca",t:7.0,m:8.0,i:9.0},
+  {code:"1402",name:"Arlecchino",type:"Novità Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1403",name:"Deliziosa",type:"Novità Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1404",name:"Genovese",type:"Novità Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1405",name:"Italiana",type:"Novità Pizza Bianca",t:7.5,m:8.5,i:9.5},
+  {code:"1406",name:"Campagnola",type:"Novità Pizza Bianca",t:8.5,m:9.5,i:10.5},
+  {code:"1407",name:"Naturale",type:"Novità Pizza Bianca",t:8.5,m:9.5,i:10.5},
+  {code:"1408",name:"Spiritosa",type:"Novità Pizza Bianca",t:8.5,m:9.5,i:10.5},
+  {code:"1409",name:"Bufalina",type:"Novità Pizza Bianca",t:9.0,m:10.0,i:11.0},
+  {code:"1410",name:"Romantica",type:"Novità Pizza Bianca",t:9.0,m:10.0,i:11.0},
+  {code:"1411",name:"Toscana",type:"Novità Pizza Bianca",t:9.0,m:10.0,i:11.0},
+  {code:"1412",name:"Bufalo Bill",type:"Novità Pizza Bianca",t:10.0,m:11.0,i:12.0},
   {code:"1501",name:"Baby Margherita",type:"Pizza Baby",t:null,m:5.0,i:6.0},
   {code:"1502",name:"Baby Olive",type:"Pizza Baby",t:null,m:5.0,i:6.0},
-  {code:"1503",name:"Baby Patatine",type:"Pizza Baby",t:null,m:5.5,i:6.5},
+  {code:"1503",name:"Baby Patatine*",type:"Pizza Baby",t:null,m:5.5,i:6.5},
   {code:"1504",name:"Baby Prosciutto",type:"Pizza Baby",t:null,m:5.5,i:6.5},
   {code:"1505",name:"Baby Wurstel",type:"Pizza Baby",t:null,m:5.5,i:6.5},
   {code:"1506",name:"Baby Fuori Menù",type:"Pizza Baby",t:null,m:5.5,i:6.5},
@@ -453,6 +453,8 @@ const MENU=[
   {code:"81",name:"Farinata Semplice",type:"Farinata",t:null,m:4.0,i:null},
   {code:"82a",name:"Farinata Farcita Stracchino",type:"Farinata",t:null,m:5.5,i:null},
   {code:"82b",name:"Farinata Farcita Gorgonzola",type:"Farinata",t:null,m:5.5,i:null},
+  {code:"83a",name:"Dippers Patatine Fritte*",type:"Farinata",t:null,m:5.5,i:null},
+  {code:"83b",name:"Stick 9x9 Patatine Fritte*",type:"Farinata",t:null,m:5.5,i:null},
 ];
 const DRINKS=[
   {code:"2101",name:"Pepsi",cp:"Omaggio",n:2.5},
@@ -637,7 +639,7 @@ function renderSummary(){
   const on=document.getElementById('order-notes').value.trim();
   const nb=document.getElementById('snotes');
   if(on){nb.style.display='block';nb.innerHTML=`<div class="si-k" style="margin-bottom:4px">📝 Note ordine</div><div style="font-size:.88rem">${on}</div>`;}else{nb.style.display='none';}
-  const CAT_ORDER=['Pizza Rossa','Novità Pizza Rossa','Pizza Bianca',"Ta' Pizza Bianca",'Pizza Baby','Calzone','Focaccia','Focaccia Farcita','Chiacchera Fritta','Farinata'];
+  const CAT_ORDER=['Pizza Rossa','Novità Pizza Rossa','Pizza Bianca',"Novità Pizza Bianca",'Pizza Baby','Calzone','Focaccia','Focaccia Farcita','Chiacchera Fritta','Farinata'];
   const grouped={};CAT_ORDER.forEach(c=>grouped[c]=[]);
   S.pizzas.forEach(p=>{const cat=p.item.type;if(!grouped[cat])grouped[cat]=[];grouped[cat].push(p);});
   const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
@@ -735,7 +737,11 @@ function renderHistory(){
       if(ord.delivery>0)bodyHtml+=`<div class="oc-item-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)"><span class="oc-item-name">Consegna</span><span class="oc-item-price">${f(ord.delivery)}</span></div>`;
       if(ord.pay)bodyHtml+=`<div class="oc-item-row"><span class="oc-item-name" style="color:var(--text-dim)">Pagamento</span><span class="oc-item-price" style="font-weight:400">${ord.pay}</span></div>`;
       if(ord.notes)bodyHtml+=`<div style="font-size:.8rem;color:var(--text-dim);margin-top:8px;padding:8px;background:var(--surface);border-radius:4px">📝 ${ord.notes}</div>`;
-      bodyHtml+=`<div class="oc-actions"><button class="btn-del-order" onclick="deleteOrder('${ord.id}',event)">Elimina</button></div>`;
+      bodyHtml+=`<div class="oc-actions">
+        <button class="btn-reorder" onclick="openReceiptFromHistory('${ord.id}',event)">🧾 Scontrino</button>
+        <button class="btn-reorder" style="background:#333" onclick="doPrintFromHistory('${ord.id}',event)">🖨️ Ristampa</button>
+        <button class="btn-del-order" onclick="deleteOrder('${ord.id}',event)">Elimina</button>
+      </div>`;
     }
     const addrLine=ord.type==='consegna'&&ord.via?`<span style="font-size:.75rem;color:var(--text-dim)"> · ${ord.via}${ord.paese?', '+ord.paese:''}</span>`:'';
     return`<div class="order-card" id="oc_${ord.id}" onclick="toggleOrder('${ord.id}')">
@@ -800,7 +806,7 @@ function buildReceipt(){
   if(isC&&S.pay)lines.push({t:'kv',k:'PAGAMENTO',v:S.pay});
   lines.push({t:'separator'});
   const ent=S.pizzas.filter(p=>!['Farinata'].includes(p.item.type)).length;
-  const CAT_ORDER=['Pizza Rossa','Novità Pizza Rossa','Pizza Bianca',"Ta' Pizza Bianca",'Pizza Baby','Calzone','Focaccia','Focaccia Farcita','Chiacchera Fritta','Farinata'];
+  const CAT_ORDER=['Pizza Rossa','Novità Pizza Rossa','Pizza Bianca',"Novità Pizza Bianca",'Pizza Baby','Calzone','Focaccia','Focaccia Farcita','Chiacchera Fritta','Farinata'];
   const grouped={};CAT_ORDER.forEach(c=>grouped[c]=[]);
   S.pizzas.forEach(p=>{if(!grouped[p.item.type])grouped[p.item.type]=[];grouped[p.item.type].push(p);});
   CAT_ORDER.forEach(cat=>{const items=grouped[cat];if(!items||!items.length)return;lines.push({t:'section',text:cat.toUpperCase()});items.forEach(p=>{lines.push({t:'item',name:p.item.name,sub:`(${p.imp})`,price:f(pTotal(p))});const all=[...p.extras.map(e=>e.name),...p.custom.filter(c=>c.trim())];if(all.length)lines.push({t:'note',text:'+ '+all.join(', ')});if(p.notes)lines.push({t:'note',text:'📝 '+p.notes});});});
@@ -837,6 +843,95 @@ function buildEposXml(lines){
   return`<?xml version="1.0" encoding="utf-8"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">${cmds}</epos-print></s:Body></s:Envelope>`;
 }
 function escXml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function buildReceiptFromOrder(ord){
+  const isC=ord.type==='consegna';
+  const dt=new Date(ord.ts);
+  const timeStr=dt.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  const dateStr=dt.toLocaleDateString('it-IT');
+  const lines=[];
+  lines.push({t:'header',text:'To.To Alpignano'});
+  lines.push({t:'sub',text:dateStr+' '+timeStr});
+  lines.push({t:'separator'});
+  lines.push({t:'kv',k:isC?'CONSEGNA':'ASPORTO',v:ord.ora||'—'});
+  lines.push({t:'kv',k:'NOME',v:ord.nome||'—'});
+  lines.push({t:'kv',k:'TEL',v:ord.tel||'—'});
+  if(isC&&ord.via)lines.push({t:'kv',k:'INDIRIZZO',v:ord.via+(ord.paese?', '+ord.paese:'')});
+  if(isC&&ord.pay)lines.push({t:'kv',k:'PAGAMENTO',v:ord.pay});
+  lines.push({t:'separator'});
+  const ent=ord.pizzas.filter(p=>p.itemType!=='Farinata').length;
+  const CAT_ORDER=['Pizza Rossa','Novità Pizza Rossa','Pizza Bianca',"Novità Pizza Bianca",'Pizza Baby','Calzone','Focaccia','Focaccia Farcita','Chiacchera Fritta','Farinata'];
+  const grouped={};CAT_ORDER.forEach(c=>grouped[c]=[]);
+  ord.pizzas.forEach(p=>{const cat=p.itemType;if(!grouped[cat])grouped[cat]=[];grouped[cat].push(p);});
+  CAT_ORDER.forEach(cat=>{
+    const items=grouped[cat];if(!items||!items.length)return;
+    lines.push({t:'section',text:cat.toUpperCase()});
+    items.forEach(p=>{
+      lines.push({t:'item',name:p.name,sub:`(${p.imp})`,price:f(p.total)});
+      const all=[...(p.extras||[]),...(p.custom||[])].filter(Boolean);
+      if(all.length)lines.push({t:'note',text:'+ '+all.join(', ')});
+      if(p.notes)lines.push({t:'note',text:'📝 '+p.notes});
+    });
+  });
+  if(ord.drinks&&ord.drinks.length){
+    lines.push({t:'section',text:'BIBITE'});
+    let omU=0;
+    ord.drinks.forEach(d=>{
+      let ps;
+      if(d.isOmaggio){const free=Math.min(d.qty,Math.max(0,ent-omU));const paid=d.qty-free;omU+=free;if(free>0&&paid===0)ps='Omaggio';else if(free>0&&paid>0)ps=`x${free} Om. + ${f(paid*d.n)}`;else ps=f(d.qty*d.n);}
+      else ps=f((ent>0?d.cp:d.n)*d.qty);
+      lines.push({t:'item',name:d.name+' x'+d.qty,sub:'',price:ps});
+    });
+  }
+  lines.push({t:'separator'});
+  if(ord.delivery>0)lines.push({t:'kv',k:'Consegna',v:f(ord.delivery)});
+  lines.push({t:'total',text:'TOTALE',value:f(ord.total)});
+  lines.push({t:'separator'});
+  lines.push({t:'sub',text:'Grazie!'});
+  return lines;
+}
+
+function openReceiptFromHistory(id,e){
+  e.stopPropagation();
+  const ord=HISTORY.find(o=>o.id===id);if(!ord)return;
+  const receipt=buildReceiptFromOrder(ord);
+  function row(left,right,bold=false){const fw=bold?'700':'400';const rAlign=right!==undefined?`<span style="float:right;font-weight:${bold?'700':'600'}">${right}</span>`:'';return`<div style="overflow:hidden;font-weight:${fw}">${rAlign}${left}</div>`;}
+  function sep(){return`<div style="border-top:1px dashed #999;margin:6px 0"></div>`;}
+  function center(t,size='1em',bold=false){return`<div style="text-align:center;font-size:${size};font-weight:${bold?'700':'400'}">${t}</div>`;}
+  let html='';
+  receipt.forEach(l=>{
+    if(l.t==='section')html+=`<div style="background:#eee;padding:3px 6px;font-size:.75em;font-weight:700;letter-spacing:.06em;margin:6px 0 2px">— ${l.text} —</div>`;
+    else if(l.t==='header')html+=center(l.text,'1.4em',true);
+    else if(l.t==='sub')html+=center(l.text,'.85em');
+    else if(l.t==='separator')html+=sep();
+    else if(l.t==='kv')html+=row(`<b>${l.k}:</b> ${l.v}`);
+    else if(l.t==='item')html+=row(`${l.name}${l.sub?` <span style="color:#666;font-size:.82em">${l.sub}</span>`:''}`,l.price,true);
+    else if(l.t==='note')html+=`<div style="padding-left:8px;color:#555;font-size:.82em">${l.text}</div>`;
+    else if(l.t==='total')html+=`<div style="display:flex;justify-content:space-between;font-size:1.2em;font-weight:800;margin:4px 0">${l.text}<span>${l.value}</span></div>`;
+  });
+  const page=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Scontrino</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Courier New',Courier,monospace;font-size:13px;line-height:1.55;background:#f5f5f5;display:flex;justify-content:center;padding:20px 0}.ticket{width:80mm;background:#fff;padding:14px 10px;box-shadow:0 2px 12px rgba(0,0,0,.12);min-height:100vh}@media print{body{background:white;padding:0}.ticket{box-shadow:none}.no-print{display:none}}</style></head><body><div class="ticket">${html}<div style="text-align:center;margin-top:16px;font-size:.78em;color:#888">- - - - - - - - - - - - - - - - - - -</div></div><div class="no-print" style="position:fixed;bottom:20px;right:20px"><button onclick="window.print()" style="background:#111;color:#fff;border:none;padding:10px 18px;border-radius:6px;font-size:.9rem;cursor:pointer">🖨️ Stampa</button></div></body></html>`;
+  const w=window.open('','_blank');if(w){w.document.write(page);w.document.close();}else alert('Popup bloccato.');
+}
+
+async function doPrintFromHistory(id,e){
+  e.stopPropagation();
+  const ord=HISTORY.find(o=>o.id===id);if(!ord)return;
+  const ip=localStorage.getItem('printer_ip')||'';
+  const ipInput=prompt('IP Stampante:',ip);
+  if(!ipInput)return;
+  localStorage.setItem('printer_ip',ipInput.trim());
+  const receipt=buildReceiptFromOrder(ord);
+  const xml=buildEposXml(receipt);
+  const url=`http://${ipInput.trim()}/cgi-bin/epos/service.cgi?devid=local_printer&timeout=10000`;
+  try{
+    const resp=await fetch(url,{method:'POST',headers:{'Content-Type':'text/xml; charset=utf-8','SOAPAction':'""'},body:xml});
+    if(resp.ok){alert('✓ Stampato con successo');}
+    else throw new Error('HTTP '+resp.status);
+  }catch(err){
+    const fb=confirm('Stampa diretta non riuscita.\nVuoi visualizzare lo scontrino per stamparlo dal browser?');
+    if(fb)openReceiptFromHistory(id,e);
+  }
+}
 
 function openReceiptTab(){
   const receipt=buildReceipt();
@@ -895,3 +990,4 @@ showStep(1);
 </script>
 </head>
 </html>
+
